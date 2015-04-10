@@ -33,7 +33,7 @@ namespace CCPApp.Views
 			ListView view = new ListView();
 			view.ItemsSource = questions;
 			view.ItemTemplate = new DataTemplate(() =>
-			{				
+			{
 				GoToQuestionButton button = new GoToQuestionButton(inspectionPage);
 				button.SetBinding(Button.TextProperty,"FullString");
 				button.SetBinding(GoToQuestionButton.QuestionProperty, "SelfReference");

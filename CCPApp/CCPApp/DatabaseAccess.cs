@@ -18,21 +18,6 @@ namespace CCPApp
 		SQLiteAsyncConnection asyncDB;
 
 		private object dbSync = new object();
-		/*bool _executingAsyncTask = false;
-		bool ExecutingAsyncTask { 
-			get {
-				lock (dbSync)
-				{
-					return _executingAsyncTask;
-				}
-			} 
-			set {
-				lock (dbSync)
-				{
-					_executingAsyncTask = value;
-				}
-			}
-		}*/
 
 		public DatabaseAccess()
 		{
@@ -49,13 +34,6 @@ namespace CCPApp
 			database.CreateTable<Inspector>();
 			database.CreateTable<InspectorInspections>();
 		}
-		/*private async Task waitUntilReady()
-		{
-			while (ExecutingAsyncTask)
-			{
-				await Task.Delay(100);
-			}
-		}*/
 		public bool ChecklistExists(string id)
 		{
 			return database.Table<ChecklistModel>().Any(c => c.Id == id);

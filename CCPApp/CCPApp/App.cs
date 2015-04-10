@@ -17,23 +17,6 @@ namespace CCPApp
 		public App()
 		{
 			List<ChecklistModel> checklists = new List<ChecklistModel>();
-			/*
-			IEnumerable<string> zipFileNames = DependencyService.Get<IFileManage>().GetAllValidFiles();
-			List<ChecklistModel> newChecklists = new List<ChecklistModel>();
-			foreach (string zipName in zipFileNames)
-			{
-				string unzippedDirectory = DependencyService.Get<IUnzipHelper>().Unzip(zipName);
-				string xmlFile = DependencyService.Get<IFileManage>().GetXmlFile(unzippedDirectory);
-				string checklistId = DependencyService.Get<IParseChecklist>().GetChecklistId(xmlFile);
-				ChecklistModel model = ChecklistModel.Initialize(xmlFile);
-				//move the files to a new folder.
-				DependencyService.Get<IFileManage>().MoveDirectoryToPrivate(unzippedDirectory, checklistId);
-				//Delete the zip file once we're done with it.
-				DependencyService.Get<IFileManage>().DeleteFile(zipName);
-				newChecklists.Add(model);
-				checklists.Add(model);
-			}*/
-			//database.SaveChecklists(newChecklists);
 
 			checklists.AddRange(database.LoadAllChecklists());
 

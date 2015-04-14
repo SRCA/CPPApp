@@ -7,6 +7,9 @@ using System.Reflection;
 
 namespace CCPApp.Utilities
 {
+	/// <summary>
+	/// For reference: http://stackoverflow.com/questions/18912697/system-componentmodel-descriptionattribute-in-portable-class-library
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 	public class EnumDescriptionAttribute : Attribute
 	{

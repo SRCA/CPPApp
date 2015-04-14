@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using CCPApp.Utilities;
 
 namespace CCPApp.Views
 {
@@ -102,8 +103,9 @@ namespace CCPApp.Views
 			List<AnswerButton> answerButtons = new List<AnswerButton>();
 			foreach (Answer answer in Enum.GetValues(typeof(Answer)))
 			{
+
 				AnswerButton button = new AnswerButton(answer);
-				button.Text = answer.ToString();
+				button.Text = EnumDescriptionAttribute.GetDescriptionFromEnumValue(answer);
 				button.Clicked += AnswerQuestion;
 				layout.Children.Add(button);
 			}

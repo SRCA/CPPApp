@@ -1,4 +1,5 @@
-﻿using SQLite.Net.Attributes;
+﻿using CCPApp.Utilities;
+using SQLite.Net.Attributes;
 using SQLiteNetExtensions.Attributes;
 using System;
 using System.Collections.Generic;
@@ -24,10 +25,12 @@ namespace CCPApp.Models
 		public Answer answer { get; set; }
 	}
 
+
 	public enum Answer
 	{
 		Yes,
 		No,
+		[EnumDescription("N/A")]
 		NA,
 		Disputed
 	}

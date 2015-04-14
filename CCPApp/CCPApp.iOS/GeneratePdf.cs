@@ -1,5 +1,6 @@
 ﻿using CCPApp.iOS;
 using CCPApp.Models;
+using CCPApp.Utilities;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Font = iTextSharp.text.Font;
@@ -467,7 +468,7 @@ namespace CCPApp.iOS
 				}
 				else
 				{
-					scoreCell = new PdfPCell(new Phrase(score.answer.ToString(), fonts["TNR10"]));
+					scoreCell = new PdfPCell(new Phrase(EnumDescriptionAttribute.GetDescriptionFromEnumValue(score.answer), fonts["TNR10"]));
 					scoreCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
 				}
 

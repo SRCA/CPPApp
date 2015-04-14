@@ -79,12 +79,6 @@ namespace CCPApp.Views
 			}
 			layout.Children.Add(existingAnswerLabel);
 
-			//Add Edit Comment Button
-			Button commentButton = new Button();
-			commentButton.Text = "Add/Edit Comment For Question";
-			commentButton.Clicked += openCommentPage;
-			layout.Children.Add(commentButton);
-
 			//References buttons
 			List<Reference> references = question.References;	
 			if (extraReferences != null)
@@ -109,6 +103,12 @@ namespace CCPApp.Views
 				button.Clicked += AnswerQuestion;
 				layout.Children.Add(button);
 			}
+
+			//Add Edit Comment Button
+			Button commentButton = new Button();
+			commentButton.Text = "Add/Edit Comment For Question";
+			commentButton.Clicked += openCommentPage;
+			layout.Children.Add(commentButton);
 
 			//Clear scores button
 			Button clearScoresButton = new Button

@@ -35,7 +35,7 @@ namespace CCPApp.Views
 			};
 
 			ResetChecklists();
-			Title = "Select a checklist";
+			Title = "Select a Checklist";
 		}
 
 		void ResetButton_Clicked(object sender, EventArgs e)

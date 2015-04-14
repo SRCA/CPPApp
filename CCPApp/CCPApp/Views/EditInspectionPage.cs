@@ -27,7 +27,7 @@ namespace CCPApp.Views
 				inspection = new Inspection();
 				inspection.Checklist = checklist;
 				inspection.ChecklistId = checklist.Id;
-				Title = "Create new Inspection";
+				Title = "Create New Inspection";
 				selectedInspectors = new List<Inspector>();
 			}
 			else

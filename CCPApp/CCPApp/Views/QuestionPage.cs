@@ -90,6 +90,7 @@ namespace CCPApp.Views
 			{
 				ReferenceButton referenceButton = new ReferenceButton(reference);
 				referenceButton.folderName = inspection.ChecklistId;
+				referenceButton.HorizontalOptions = LayoutOptions.Start;
 				layout.Children.Add(referenceButton);
 			}
 
@@ -97,9 +98,9 @@ namespace CCPApp.Views
 			List<AnswerButton> answerButtons = new List<AnswerButton>();
 			foreach (Answer answer in Enum.GetValues(typeof(Answer)))
 			{
-
 				AnswerButton button = new AnswerButton(answer);
 				button.Text = EnumDescriptionAttribute.GetDescriptionFromEnumValue(answer);
+				button.HorizontalOptions = LayoutOptions.Start;
 				button.Clicked += AnswerQuestion;
 				layout.Children.Add(button);
 			}
@@ -108,6 +109,7 @@ namespace CCPApp.Views
 			Button commentButton = new Button();
 			commentButton.Text = "Add/Edit Comment For Question";
 			commentButton.Clicked += openCommentPage;
+			commentButton.HorizontalOptions = LayoutOptions.Start;
 			layout.Children.Add(commentButton);
 
 			//Clear scores button
@@ -116,6 +118,7 @@ namespace CCPApp.Views
 				Text = "Clear Scores"
 			};
 			clearScoresButton.Clicked += clearScores;
+			clearScoresButton.HorizontalOptions = LayoutOptions.Start;
 			layout.Children.Add(clearScoresButton);
 
 			//Remarks label

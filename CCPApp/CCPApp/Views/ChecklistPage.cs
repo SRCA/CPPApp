@@ -47,7 +47,7 @@ namespace CCPApp.Views
 				cells.Add(cell);
 			}
 			CreateInspectionButton createInspectionButton = new CreateInspectionButton(checklist);
-			createInspectionButton.Text = "Start new Inspection";
+			createInspectionButton.Text = "Start New Inspection";
 			createInspectionButton.Clicked += InspectionHelper.CreateInspectionButtonClicked;
 			ViewCell createInspectionButtonView = new ViewCell();
 			createInspectionButtonView.View = createInspectionButton;

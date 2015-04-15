@@ -134,6 +134,17 @@ namespace CCPApp.Views
 			remarksBox.TextChanged += SaveRemarksText;
 			layout.Children.Add(remarksBox);
 
+			// Segmented Answer Control test
+			SegmentedControl segmentedControl = new SegmentedControl();
+			foreach (Answer answer in Enum.GetValues(typeof(Answer)))
+			{
+				AnswerSegmentedControlOption segmentedControlOption = new AnswerSegmentedControlOption(answer);
+				segmentedControlOption.Text = EnumDescriptionAttribute.GetDescriptionFromEnumValue(answer);
+				segmentedControl.Children.Add(segmentedControlOption);
+			}
+			layout.Children.Add(segmentedControl);
+
+
 			ScrollView scroll = new ScrollView();
 			scroll.Content = layout;
 

@@ -26,7 +26,10 @@ namespace CCPApp.iOS.Renderers
 			}
 
 			segmentedControl.ValueChanged += (sender, eventArgs) => {
-				e.NewElement.SelectedValue = segmentedControl.TitleAt(segmentedControl.SelectedSegment);
+				var selectedSegment = segmentedControl.SelectedSegment;
+
+				e.NewElement.SelectedValue = segmentedControl.TitleAt(selectedSegment);
+				e.NewElement.SelectedIndex = selectedSegment;
 			};
 
 			SetNativeControl (segmentedControl);

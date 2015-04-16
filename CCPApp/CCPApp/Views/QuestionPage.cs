@@ -25,52 +25,92 @@ namespace CCPApp.Views
 			this.inspection = inspection;
 			StackLayout layout = new StackLayout
 			{
-				Padding = new Thickness(20,0),
-				Spacing = 0,
-				VerticalOptions = LayoutOptions.Center,
+				Padding = new Thickness(20,20),
+				Spacing = 0
+				//VerticalOptions = LayoutOptions.Center,
 			};
 
-			Label SectionLabel = new Label
-			{
-				Text = "Section "+question.section.Label+": "+question.section.Title,
-				HorizontalOptions = LayoutOptions.Center,
-			};
-			layout.Children.Add(SectionLabel);
-			if (question.SectionPartId != null)
-			{
-				Label PartLabel = new Label
+			layout.Children.Add(
+				new StackLayout
 				{
-					Text = "Part "+question.part.Label+": "+question.part.Description,
-					HorizontalOptions = LayoutOptions.Center,
-				};
-				layout.Children.Add(PartLabel);
-			}
+					Orientation = StackOrientation.Horizontal,
+					Children = 
+					{
+						// Section
+						new Label {
+							Text = "Section " + question.section.Label + ": " + question.section.Title,
+							FontAttributes = FontAttributes.Bold,
+							HorizontalOptions = LayoutOptions.StartAndExpand
+						},
+						// Question Number
+						new Label {
+							Text = "Question " + question.numberString,
+							HorizontalOptions = LayoutOptions.EndAndExpand,
+							XAlign = TextAlignment.End,
+						}
+					}
+				}
+			);
 
-			//Question number
-			Label questionNumberlabel = new Label
-			{
-				Text = "Question "+question.numberString,
-				HorizontalOptions = LayoutOptions.Center
-			};
-			layout.Children.Add(questionNumberlabel);
+			// Part
+			layout.Children.Add(
+				new StackLayout
+				{
+					Orientation = StackOrientation.Horizontal,
+					Children =
+					{
+						new Label {
+							Text = "Part " + question.part.Label + ": " + question.part.Description
+						}
+					}
+				});
 
-			//Question text
-			Label questionTextLabel = new Label();
-			if (textOverride == null)
+			layout.Children.Add(GetSpacing(20));
+			layout.Children.Add(GetHorizontalLine());
+
+			// Question text
+			layout.Children.Add(
+				new StackLayout
+				{
+					BackgroundColor = Color.Yellow,
+					Padding = new Thickness(10, 20, 10, 20),
+					Children =
+					{
+						new Label {
+							Text = (textOverride == null) ? question.Text.Trim() : textOverride,
+							FontAttributes = FontAttributes.Italic
+						}
+					}
+				});
+
+			layout.Children.Add(GetHorizontalLine());
+
+			//Add Edit Comment Button
+			Button commentButton = new Button();
+			commentButton.Text = "Add/Edit Comment For Question";
+			commentButton.Clicked += openCommentPage;
+			commentButton.HorizontalOptions = LayoutOptions.End;
+			layout.Children.Add(commentButton);
+
+			layout.Children.Add(GetSpacing(10));
+
+			// Segmented Answer Control
+			SegmentedControl segmentedControl = new SegmentedControl();
+			segmentedControl.ValueChanged += segmentedControl_ValueChanged;
+			foreach (Answer answer in Enum.GetValues(typeof(Answer)))
 			{
-				questionTextLabel.Text = question.Text.Trim();
+				AnswerSegmentedControlOption segmentedControlOption = new AnswerSegmentedControlOption(answer);
+				segmentedControlOption.Text = EnumDescriptionAttribute.GetDescriptionFromEnumValue(answer);
+				segmentedControl.Children.Add(segmentedControlOption);
 			}
-			else
-			{
-				questionTextLabel.Text = textOverride;
-			}
-			layout.Children.Add(questionTextLabel);
+			layout.Children.Add(segmentedControl);
 
 			//Answer
 			score = inspection.GetScoreForQuestion(question);
 			if (score != null) {
 				HasScore = true;
-				existingAnswerLabel.Text = "Answer: " + score.answer.ToString();
+				var answer = EnumDescriptionAttribute.GetDescriptionFromEnumValue(score.answer);
+				existingAnswerLabel.Text = "Answer: " + answer;
 			}
 			else
 			{
@@ -78,21 +118,6 @@ namespace CCPApp.Views
 				existingAnswerLabel.Text = "";
 			}
 			layout.Children.Add(existingAnswerLabel);
-
-			//References buttons
-			List<Reference> references = question.References;	
-			if (extraReferences != null)
-			{		//Creates a copy of the list so we aren't adding to the original.
-				references = references.ToList();
-				references.AddRange(extraReferences);	
-			}
-			foreach (Reference reference in references)
-			{
-				ReferenceButton referenceButton = new ReferenceButton(reference);
-				referenceButton.folderName = inspection.ChecklistId;
-				referenceButton.HorizontalOptions = LayoutOptions.Start;
-				layout.Children.Add(referenceButton);
-			}
 
 			//Answer buttons
 			List<AnswerButton> answerButtons = new List<AnswerButton>();
@@ -105,13 +130,6 @@ namespace CCPApp.Views
 				layout.Children.Add(button);
 			}
 
-			//Add Edit Comment Button
-			Button commentButton = new Button();
-			commentButton.Text = "Add/Edit Comment For Question";
-			commentButton.Clicked += openCommentPage;
-			commentButton.HorizontalOptions = LayoutOptions.Start;
-			layout.Children.Add(commentButton);
-
 			//Clear scores button
 			Button clearScoresButton = new Button
 			{
@@ -121,6 +139,31 @@ namespace CCPApp.Views
 			clearScoresButton.HorizontalOptions = LayoutOptions.Start;
 			layout.Children.Add(clearScoresButton);
 
+			// References label
+			layout.Children.Add(new Label
+			{
+				Text = "References:",
+				FontAttributes = FontAttributes.Bold
+			});
+			layout.Children.Add(GetSpacing(5));
+			layout.Children.Add(GetHorizontalLine());
+
+			//References buttons
+			List<Reference> references = question.References;
+			if (extraReferences != null)
+			{		//Creates a copy of the list so we aren't adding to the original.
+				references = references.ToList();
+				references.AddRange(extraReferences);
+			}
+			foreach (Reference reference in references)
+			{
+				ReferenceButton referenceButton = new ReferenceButton(reference);
+				referenceButton.folderName = inspection.ChecklistId;
+				referenceButton.BackgroundColor = Color.Red;
+				referenceButton.HorizontalOptions = LayoutOptions.Start;
+				layout.Children.Add(referenceButton);
+			}
+
 			//Remarks label
 			Label remarksLabel = new Label();
 			remarksLabel.Text = "Remarks:";
@@ -129,26 +172,41 @@ namespace CCPApp.Views
 			//Remarks box
 			remarksBox = new Editor();
 			remarksBox.Text = question.Remarks;
-			remarksBox.HeightRequest = 50;
+			remarksBox.HeightRequest = 175;
 			question.OldRemarks = question.Remarks;
 			remarksBox.TextChanged += SaveRemarksText;
 			layout.Children.Add(remarksBox);
-
-			// Segmented Answer Control test
-			SegmentedControl segmentedControl = new SegmentedControl();
-			foreach (Answer answer in Enum.GetValues(typeof(Answer)))
-			{
-				AnswerSegmentedControlOption segmentedControlOption = new AnswerSegmentedControlOption(answer);
-				segmentedControlOption.Text = EnumDescriptionAttribute.GetDescriptionFromEnumValue(answer);
-				segmentedControl.Children.Add(segmentedControlOption);
-			}
-			layout.Children.Add(segmentedControl);
-
 
 			ScrollView scroll = new ScrollView();
 			scroll.Content = layout;
 
 			Content = scroll;
+		}
+
+		void segmentedControl_ValueChanged(object sender, EventArgs e)
+		{
+			var segmentedControl = (SegmentedControl)sender;
+			var selectedSegment = segmentedControl.Children[segmentedControl.SelectedIndex] as AnswerSegmentedControlOption;
+
+			if (score == null)
+			{
+				score = new ScoredQuestion();
+			}
+			score.QuestionId = (int)question.Id;
+			score.question = question;
+			score.inspection = inspection;
+			if (!inspection.scores.Contains(score))
+			{
+				inspection.scores.Add(score);
+			}
+			score.answer = selectedSegment.answer;
+			App.database.SaveScore(score);
+			existingAnswerLabel.Text = "Answer: " + EnumDescriptionAttribute.GetDescriptionFromEnumValue(score.answer);
+			HasScore = true;
+			sectionPage.UpdateIcon(true);
+			sectionPage.AutoAdvance(question);
+
+		
 		}
 		protected async void SaveRemarksText(object Sender, EventArgs e)
 		{
@@ -218,7 +276,34 @@ namespace CCPApp.Views
 				await App.Navigation.PushAsync(page);
 			});
 		}
+
+		private BoxView GetHorizontalLine()
+		{
+			return new BoxView
+				{
+					HeightRequest = 1,
+					Color = Color.Black
+				};
+		}
+
+		private BoxView GetSpacing(double heightRequest)
+		{
+			return new BoxView
+			{
+				HeightRequest = heightRequest
+			};
+		}
 	}
+
+	internal class AnswerSegmentedControlOption : SegmentedControlOption
+	{
+		public Answer answer;
+		public AnswerSegmentedControlOption(Answer answer)
+		{
+			this.answer = answer;
+		}
+	}
+
 	internal class AnswerButton : Button
 	{
 		public Answer answer;

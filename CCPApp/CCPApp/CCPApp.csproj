@@ -36,7 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="BindableObjectExtensions.cs" />
     <Compile Include="ChecklistHelper.cs" />
+    <Compile Include="EventArgs{T}.cs" />
+    <Compile Include="EventExtensions.cs" />
     <Compile Include="IExportInspection.cs" />
     <Compile Include="IGeneratePdf.cs">
       <SubType>Code</SubType>
@@ -47,8 +50,10 @@
     <Compile Include="Models\IdModel.cs" />
     <Compile Include="Models\InspectorModel.cs" />
     <Compile Include="Models\ReportOptionsModel.cs" />
+    <Compile Include="Utilities\BindableRadioGroup.cs" />
     <Compile Include="Utilities\BothSidesLayout.cs" />
     <Compile Include="Utilities\BoundMenuItem.cs" />
+    <Compile Include="Utilities\CustomRadioButton.cs" />
     <Compile Include="Utilities\EnumDescriptionAttribute.cs" />
     <Compile Include="Utilities\GenericPicker.cs" />
     <Compile Include="Utilities\IUnzipHelper.cs" />

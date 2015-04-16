@@ -13,7 +13,6 @@ using System.IO;
 using System.Text;
 using System.Drawing;
 using Xamarin.Forms;
-using CCPApp.Utilities;
 
 [assembly: Dependency(typeof(GeneratePdf))]
 namespace CCPApp.iOS

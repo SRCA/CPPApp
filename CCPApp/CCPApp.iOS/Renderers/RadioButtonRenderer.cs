@@ -31,11 +31,10 @@ namespace CCPApp.iOS.Renderers
                 SetNativeControl(checkBox);
             }
 
-           
-            
-
+			
+			Control.Font = UIFont.ItalicSystemFontOfSize(Control.Font.PointSize);
             Control.LineBreakMode = UILineBreakMode.CharacterWrap;
-            Control.VerticalAlignment = UIControlContentVerticalAlignment.Top;
+            Control.VerticalAlignment = UIControlContentVerticalAlignment.Center;
             Control.Text = e.NewElement.Text;
             Control.Checked = e.NewElement.Checked;
             Control.SetTitleColor(e.NewElement.TextColor.ToUIColor(), UIControlState.Normal);
@@ -72,8 +71,6 @@ namespace CCPApp.iOS.Renderers
             base.Draw(rect);
             this.ResizeText();
         }
-
-        
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

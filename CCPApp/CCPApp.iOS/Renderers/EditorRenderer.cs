@@ -23,7 +23,7 @@ namespace CCPApp.iOS.Renderers
 			{
 				CALayer layer = Control.Layer;
 				layer.BorderWidth = 1F;
-				layer.BorderColor = UIColor.LightGray.CGColor;
+				layer.BorderColor = UIColor.Black.CGColor;
 				layer.CornerRadius = 8;
 			}
 		}

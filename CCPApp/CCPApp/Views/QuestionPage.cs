@@ -83,7 +83,6 @@ namespace CCPApp.Views
 					}
 				});
 
-
 			//Add Edit Comment Button
 			Button commentButton = new Button();
 			commentButton.Text = "Add/Edit Comment For Question";
@@ -93,12 +92,10 @@ namespace CCPApp.Views
 
 			layout.Children.Add(GetSpacing(10));
 
-
-			layout.Children.Add(new CustomRadioButton { Text = "Test" });
-
 			//Answer
 			score = inspection.GetScoreForQuestion(question);
-			if (score != null) {
+			if (score != null)
+			{
 				HasScore = true;
 				var answer = EnumDescriptionAttribute.GetDescriptionFromEnumValue(score.answer);
 				existingAnswerLabel.Text = "Answer: " + answer;
@@ -109,6 +106,16 @@ namespace CCPApp.Views
 				existingAnswerLabel.Text = "";
 			}
 			layout.Children.Add(existingAnswerLabel);
+
+			// Answers - Radio Group
+			var answers = Enum.GetValues(typeof(Answer)).Cast<Answer>().ToList();
+			var answerRadioGroup = new BindableRadioGroup
+				{
+					ItemsSource = answers.Select(x => EnumDescriptionAttribute.GetDescriptionFromEnumValue(x)),
+					SelectedIndex = HasScore == true ? answers.FindIndex(x => x.Equals(score.answer)) : -1
+				};
+			answerRadioGroup.CheckedChanged += answerRadioGroup_CheckedChanged;
+			layout.Children.Add(answerRadioGroup);
 
 			//Answer buttons
 			List<AnswerButton> answerButtons = new List<AnswerButton>();
@@ -187,6 +194,34 @@ namespace CCPApp.Views
 			base.OnDisappearing();
 		}
 
+		void answerRadioGroup_CheckedChanged(object sender, int e)
+		{
+			var radio = sender as CustomRadioButton;
+
+			if (radio == null) return;
+
+			var answer = Enum.GetValues(typeof(Answer)).Cast<Answer>().ElementAt(radio.Id);
+
+			if (score == null)
+			{
+				score = new ScoredQuestion();
+			}
+			score.QuestionId = (int)question.Id;
+			score.question = question;
+			score.inspection = inspection;
+			if (!inspection.scores.Contains(score))
+			{
+				inspection.scores.Add(score);
+			}
+			score.answer = answer;
+			App.database.SaveScore(score);
+			existingAnswerLabel.Text = "Answer: " + score.answer.ToString();
+			HasScore = true;
+			sectionPage.UpdateIcon(true);
+			sectionPage.AutoAdvance(question);
+		}
+
+
 		private void AnswerQuestion(object sender, EventArgs e)
 		{
 			AnswerButton button = (AnswerButton)sender;
@@ -261,6 +296,12 @@ namespace CCPApp.Views
 		}
 	}
 
+	internal class AnswerChoice
+	{
+		public Answer Answer { get; set; }
+		public string Text { get; set; }
+	}
+
 	internal class AnswerButton : Button
 	{
 		public Answer answer;
@@ -269,6 +310,7 @@ namespace CCPApp.Views
 			this.answer = answer;
 		}
 	}
+
 	internal class ReferenceButton : Button
 	{
 		public Reference reference { get; set; }

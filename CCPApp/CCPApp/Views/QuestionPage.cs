@@ -83,7 +83,6 @@ namespace CCPApp.Views
 					}
 				});
 
-			layout.Children.Add(GetHorizontalLine());
 
 			//Add Edit Comment Button
 			Button commentButton = new Button();
@@ -94,16 +93,8 @@ namespace CCPApp.Views
 
 			layout.Children.Add(GetSpacing(10));
 
-			// Segmented Answer Control
-			SegmentedControl segmentedControl = new SegmentedControl();
-			segmentedControl.ValueChanged += segmentedControl_ValueChanged;
-			foreach (Answer answer in Enum.GetValues(typeof(Answer)))
-			{
-				AnswerSegmentedControlOption segmentedControlOption = new AnswerSegmentedControlOption(answer);
-				segmentedControlOption.Text = EnumDescriptionAttribute.GetDescriptionFromEnumValue(answer);
-				segmentedControl.Children.Add(segmentedControlOption);
-			}
-			layout.Children.Add(segmentedControl);
+
+			layout.Children.Add(new CustomRadioButton { Text = "Test" });
 
 			//Answer
 			score = inspection.GetScoreForQuestion(question);
@@ -183,31 +174,6 @@ namespace CCPApp.Views
 			Content = scroll;
 		}
 
-		void segmentedControl_ValueChanged(object sender, EventArgs e)
-		{
-			var segmentedControl = (SegmentedControl)sender;
-			var selectedSegment = segmentedControl.Children[segmentedControl.SelectedIndex] as AnswerSegmentedControlOption;
-
-			if (score == null)
-			{
-				score = new ScoredQuestion();
-			}
-			score.QuestionId = (int)question.Id;
-			score.question = question;
-			score.inspection = inspection;
-			if (!inspection.scores.Contains(score))
-			{
-				inspection.scores.Add(score);
-			}
-			score.answer = selectedSegment.answer;
-			App.database.SaveScore(score);
-			existingAnswerLabel.Text = "Answer: " + EnumDescriptionAttribute.GetDescriptionFromEnumValue(score.answer);
-			HasScore = true;
-			sectionPage.UpdateIcon(true);
-			sectionPage.AutoAdvance(question);
-
-		
-		}
 		protected async void SaveRemarksText(object Sender, EventArgs e)
 		{
 			await Task.Run(() => question.Remarks = remarksBox.Text);
@@ -292,15 +258,6 @@ namespace CCPApp.Views
 			{
 				HeightRequest = heightRequest
 			};
-		}
-	}
-
-	internal class AnswerSegmentedControlOption : SegmentedControlOption
-	{
-		public Answer answer;
-		public AnswerSegmentedControlOption(Answer answer)
-		{
-			this.answer = answer;
 		}
 	}
 

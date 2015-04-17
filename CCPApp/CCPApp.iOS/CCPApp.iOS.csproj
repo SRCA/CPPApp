@@ -106,7 +106,6 @@
     <Compile Include="Renderers\RadioButtonView.cs" />
     <Compile Include="Renderers\TableViewRenderer.cs" />
     <Compile Include="SaveInspection.cs" />
-    <Compile Include="Renderers\SegmentedControlRenderer.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
     <Compile Include="Utilities\UnzipHelper.cs" />
     <Compile Include="Renderers\PdfPageRenderer.cs" />

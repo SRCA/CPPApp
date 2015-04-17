@@ -71,7 +71,7 @@ namespace CCPApp.Views
 			layout.Children.Add(
 				new StackLayout
 				{
-					BackgroundColor = Color.Yellow,
+					BackgroundColor = Color.FromHex("#ffd758"),
 					Padding = new Thickness(10, 20, 10, 20),
 					Children =
 					{
@@ -81,15 +81,17 @@ namespace CCPApp.Views
 						}
 					}
 				});
+			layout.Children.Add(GetHorizontalLine());
 
 			//Add Edit Comment Button
 			Button commentButton = new Button();
 			commentButton.Text = "Add/Edit Comment For Question";
+			commentButton.FontAttributes = FontAttributes.Italic;
 			commentButton.Clicked += openCommentPage;
 			commentButton.HorizontalOptions = LayoutOptions.End;
 			layout.Children.Add(commentButton);
 
-			layout.Children.Add(GetSpacing(10));
+			layout.Children.Add(GetSpacing(5));
 
 			//Answer
 			score = inspection.GetScoreForQuestion(question);
@@ -111,16 +113,17 @@ namespace CCPApp.Views
 					SelectedIndex = HasScore == true ? answers.FindIndex(x => x.Equals(score.answer)) : -1
 				};
 			answerRadioGroup.CheckedChanged += answerRadioGroup_CheckedChanged;
-			layout.Children.Add(answerRadioGroup);
+			answerRadioGroup.ItemUnchecked += answerRadioGroup_Unchecked;
+			
+			if(question.Number == 1)
+			{ 
+			layout.Children.Add(new StackLayout { 
+				Padding = new Thickness(25, 0),
+				Children = { answerRadioGroup }
+			});
+			}
 
-			//Clear scores button
-			Button clearScoresButton = new Button
-			{
-				Text = "Clear Scores"
-			};
-			clearScoresButton.Clicked += clearScores;
-			clearScoresButton.HorizontalOptions = LayoutOptions.Start;
-			layout.Children.Add(clearScoresButton);
+			layout.Children.Add(GetSpacing(25));
 
 			// References label
 			layout.Children.Add(new Label
@@ -138,24 +141,38 @@ namespace CCPApp.Views
 				references = references.ToList();
 				references.AddRange(extraReferences);
 			}
+
 			foreach (Reference reference in references)
 			{
-				ReferenceButton referenceButton = new ReferenceButton(reference);
-				referenceButton.folderName = inspection.ChecklistId;
-				referenceButton.BackgroundColor = Color.Red;
-				referenceButton.HorizontalOptions = LayoutOptions.Start;
-				layout.Children.Add(referenceButton);
+				var referenceButton = new ReferenceButton(reference) { folderName = inspection.ChecklistId, FontAttributes = FontAttributes.Italic};
+				layout.Children.Add(
+					new StackLayout
+					{
+						Orientation = StackOrientation.Horizontal,
+						Padding = new Thickness(25, 0),
+						HeightRequest = 30,
+						Children = 
+						{
+							new Label { TextColor = referenceButton.TextColor, FontSize = 40, WidthRequest = 24, XAlign = TextAlignment.Center, Text = "\u2022" },
+							referenceButton
+						}
+					});
 			}
 
+			layout.Children.Add(GetSpacing(25));
+
+
 			//Remarks label
-			Label remarksLabel = new Label();
-			remarksLabel.Text = "Remarks:";
-			layout.Children.Add(remarksLabel);
+			layout.Children.Add(new Label
+			{
+				Text = "Remarks:",
+				FontAttributes = FontAttributes.Bold
+			});
 
 			//Remarks box
 			remarksBox = new Editor();
 			remarksBox.Text = question.Remarks;
-			remarksBox.HeightRequest = 175;
+			remarksBox.HeightRequest = 100;
 			question.OldRemarks = question.Remarks;
 			remarksBox.TextChanged += SaveRemarksText;
 			layout.Children.Add(remarksBox);
@@ -164,6 +181,11 @@ namespace CCPApp.Views
 			scroll.Content = layout;
 
 			Content = scroll;
+		}
+
+		void answerRadioGroup_Unchecked(object sender, int e)
+		{
+			clearScores();
 		}
 
 		protected async void SaveRemarksText(object Sender, EventArgs e)
@@ -205,7 +227,7 @@ namespace CCPApp.Views
 			sectionPage.AutoAdvance(question);
 		}
 
-		private void clearScores(object sender, EventArgs e)
+		private void clearScores()
 		{
 			if (score != null)
 			{
@@ -215,6 +237,7 @@ namespace CCPApp.Views
 			HasScore = false;
 			sectionPage.UpdateIcon(false);
 		}
+
 		private void openCommentPage(object sender, EventArgs e)
 		{
 			Device.BeginInvokeOnMainThread(async () =>

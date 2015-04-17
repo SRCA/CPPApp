@@ -113,17 +113,6 @@ namespace CCPApp.Views
 			answerRadioGroup.CheckedChanged += answerRadioGroup_CheckedChanged;
 			layout.Children.Add(answerRadioGroup);
 
-			//Answer buttons
-			List<AnswerButton> answerButtons = new List<AnswerButton>();
-			foreach (Answer answer in Enum.GetValues(typeof(Answer)))
-			{
-				AnswerButton button = new AnswerButton(answer);
-				button.Text = EnumDescriptionAttribute.GetDescriptionFromEnumValue(answer);
-				button.HorizontalOptions = LayoutOptions.Start;
-				button.Clicked += AnswerQuestion;
-				layout.Children.Add(button);
-			}
-
 			//Clear scores button
 			Button clearScoresButton = new Button
 			{
@@ -216,27 +205,6 @@ namespace CCPApp.Views
 			sectionPage.AutoAdvance(question);
 		}
 
-
-		private void AnswerQuestion(object sender, EventArgs e)
-		{
-			AnswerButton button = (AnswerButton)sender;
-			if (score == null)
-			{
-				score = new ScoredQuestion();
-			}
-			score.QuestionId = (int)question.Id;
-			score.question = question;
-			score.inspection = inspection;
-			if (!inspection.scores.Contains(score))
-			{
-				inspection.scores.Add(score);
-			}
-			score.answer = button.answer;
-			App.database.SaveScore(score);
-			HasScore = true;
-			sectionPage.UpdateIcon(true);
-			sectionPage.AutoAdvance(question);
-		}
 		private void clearScores(object sender, EventArgs e)
 		{
 			if (score != null)
@@ -293,15 +261,6 @@ namespace CCPApp.Views
 	{
 		public Answer Answer { get; set; }
 		public string Text { get; set; }
-	}
-
-	internal class AnswerButton : Button
-	{
-		public Answer answer;
-		public AnswerButton(Answer answer)
-		{
-			this.answer = answer;
-		}
 	}
 
 	internal class ReferenceButton : Button

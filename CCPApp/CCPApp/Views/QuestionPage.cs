@@ -15,7 +15,6 @@ namespace CCPApp.Views
 		Inspection inspection;
 		ScoredQuestion score;
 		Editor remarksBox;
-		Label existingAnswerLabel = new Label();
 		public ISectionPage sectionPage { get; set; }
 		public bool HasScore = false;
 
@@ -98,14 +97,11 @@ namespace CCPApp.Views
 			{
 				HasScore = true;
 				var answer = EnumDescriptionAttribute.GetDescriptionFromEnumValue(score.answer);
-				existingAnswerLabel.Text = "Answer: " + answer;
 			}
 			else
 			{
 				HasScore = false;
-				existingAnswerLabel.Text = "";
 			}
-			layout.Children.Add(existingAnswerLabel);
 
 			// Answers - Radio Group
 			var answers = Enum.GetValues(typeof(Answer)).Cast<Answer>().ToList();
@@ -215,7 +211,6 @@ namespace CCPApp.Views
 			}
 			score.answer = answer;
 			App.database.SaveScore(score);
-			existingAnswerLabel.Text = "Answer: " + score.answer.ToString();
 			HasScore = true;
 			sectionPage.UpdateIcon(true);
 			sectionPage.AutoAdvance(question);
@@ -238,7 +233,6 @@ namespace CCPApp.Views
 			}
 			score.answer = button.answer;
 			App.database.SaveScore(score);
-			existingAnswerLabel.Text = "Answer: " + score.answer.ToString();
 			HasScore = true;
 			sectionPage.UpdateIcon(true);
 			sectionPage.AutoAdvance(question);
@@ -251,7 +245,6 @@ namespace CCPApp.Views
 				App.database.DeleteScore(score);
 			}
 			HasScore = false;
-			existingAnswerLabel.Text = "";
 			sectionPage.UpdateIcon(false);
 		}
 		private void openCommentPage(object sender, EventArgs e)

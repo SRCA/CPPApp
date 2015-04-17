@@ -60,9 +60,10 @@ namespace CCPApp.Utilities
                 {
                     var rad = new CustomRadioButton();
                     rad.Text = item.ToString();
-                    rad.Id = radIndex;  
-                   
+                    rad.Id = radIndex;
+
                     rad.CheckedChanged += radButtons.OnCheckedChanged;
+					rad.Highlight(false);
 
                     radButtons.rads.Add(rad);
                                     
@@ -74,27 +75,31 @@ namespace CCPApp.Utilities
 
         private void OnCheckedChanged(object sender, EventArgs<bool> e)
         {
+			var selectedRad = sender as CustomRadioButton;
+
 			if(e.Value == false)
 			{
 				if (ItemUnchecked != null && rads.All(x => x.Checked == false))
+				{
+					selectedRad.Highlight(false);
 					ItemUnchecked.Invoke(sender, 0);
+				}
 				
 				return;
 			}
 
-            var selectedRad = sender as CustomRadioButton;
-
-            foreach (var rad in rads)
+			foreach (var rad in rads)
             {
                 if(!selectedRad.Id.Equals(rad.Id))
                 {
                     rad.Checked = false;
+					rad.Highlight(false);
                 }
                 else
                 {
+					rad.Highlight(true);
 					if(CheckedChanged != null)
                     	CheckedChanged.Invoke(sender, rad.Id); 
-                   
                 }
                 
             }

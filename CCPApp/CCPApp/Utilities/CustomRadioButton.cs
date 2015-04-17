@@ -85,10 +85,21 @@ namespace CCPApp.Utilities
             }
         }
 
-        public int Id { get; set; }
-   
-        
-       
+        public int Id { get; set; }   
+    
+		public void Highlight (bool highlight)
+		{
+			if(highlight)
+			{
+				Opacity = 1;
+				BackgroundColor = Color.FromHex("#E0F7E0");
+			}
+			else
+			{
+				Opacity = 0.5;
+				BackgroundColor = Color.White;
+			}
+		}
     }
 
   

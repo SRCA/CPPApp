@@ -44,8 +44,8 @@ namespace CCPApp.Utilities
         }
       
         public event EventHandler<int> CheckedChanged;
-
-
+		public event EventHandler<int> ItemUnchecked;
+	
 
         private static void OnItemsSourceChanged(BindableObject bindable, IEnumerable oldvalue, IEnumerable newvalue)
         {
@@ -55,7 +55,6 @@ namespace CCPApp.Utilities
             radButtons.Children.Clear();
             if (newvalue != null)
             {
-              
                 int radIndex = 0;
                 foreach (var item in newvalue)
                 {
@@ -64,7 +63,7 @@ namespace CCPApp.Utilities
                     rad.Id = radIndex;  
                    
                     rad.CheckedChanged += radButtons.OnCheckedChanged;
-                  
+
                     radButtons.rads.Add(rad);
                                     
                     radButtons.Children.Add(rad);
@@ -75,8 +74,13 @@ namespace CCPApp.Utilities
 
         private void OnCheckedChanged(object sender, EventArgs<bool> e)
         {
-           
-           if (e.Value == false) return;
+			if(e.Value == false)
+			{
+				if (ItemUnchecked != null && rads.All(x => x.Checked == false))
+					ItemUnchecked.Invoke(sender, 0);
+				
+				return;
+			}
 
             var selectedRad = sender as CustomRadioButton;
 

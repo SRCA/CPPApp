@@ -31,23 +31,23 @@ namespace CCPApp.Views
 
 			StackLayout layout = new StackLayout
 			{
-				VerticalOptions = LayoutOptions.Center,
-				HorizontalOptions = LayoutOptions.Center
+				Padding = new Thickness(20, 28)
 			};
 			Page frontPage = App.Navigation.NavigationStack.First();
 			double width = frontPage.Width;
 			layout.WidthRequest = width * .95;
 
 			//Choose comment type
-			Label chooseCommentTypeLabel = new Label{Text="Choose comment type"};
+			Label chooseCommentTypeLabel = new Label { Text = "Choose Comment Type:", FontAttributes = FontAttributes.Bold };
 			commentTypePicker = new GenericPicker<CommentType>();
 			commentTypePicker.AddItem(CommentType.Finding);
 			commentTypePicker.AddItem(CommentType.Observation);
 			commentTypePicker.AddItem(CommentType.Commendable);
 			commentTypePicker.SelectedIndexChanged += SelectCommentType;
 
+
 			//Choose question
-			Label chooseQuestionLabel = new Label{Text="Choose question"};
+			Label chooseQuestionLabel = new Label{Text="Choose Question:", FontAttributes = FontAttributes.Bold};
 			questionPicker = new GenericPicker<Question>();
 			foreach (Question question in checklist.GetAllQuestions().Where(q => !q.HasSubItems))
 			{
@@ -56,28 +56,28 @@ namespace CCPApp.Views
 			questionPicker.SelectedIndexChanged += SelectQuestion;
 
 			//Comment description
-			Label commentSubjectLabel = new Label{Text="Subject"};
-			subjectTextEditor = new Editor();
+			Label commentSubjectLabel = new Label { Text = "Subject:", FontAttributes = FontAttributes.Bold };
+			subjectTextEditor = new Editor () ;
 			subjectTextEditor.HeightRequest = 80;
-
+			
 			//Enter comment
-			commentIndicatorLabel = new Label{Text="Comment:"};
+			commentIndicatorLabel = new Label { Text = "Comment:", FontAttributes = FontAttributes.Bold };
 			commentText = new Editor();
 			commentText.HeightRequest = 80;
 
 			//Discussion
-			Label DiscussionLabel = new Label { Text = "Discussion:" };
+			Label DiscussionLabel = new Label { Text = "Discussion:", FontAttributes = FontAttributes.Bold };
 			discussionText = new Editor();
 			discussionText.HeightRequest = 80;
 
 			//Recommendation
-			Label RecommendationLabel = new Label { Text = "Recommendation/Action Taken or Required:" };
+			Label RecommendationLabel = new Label { Text = "Recommendation/Action Taken or Required:", FontAttributes = FontAttributes.Bold };
 			recommendationText = new Editor();
 			recommendationText.HeightRequest = 80;
 
 			//Choose date
-			Label chooseDateLabel = new Label{Text="Date:"};
-			DatePicker date = new DatePicker();
+			Label chooseDateLabel = new Label { Text = "Date:", FontAttributes = FontAttributes.Bold };
+			DatePicker date = new DatePicker() { Format = "MMMM dd, yyyy", HorizontalOptions = LayoutOptions.Start };
 			date.Date = DateTime.Now;
 
 			//Save button
@@ -95,22 +95,66 @@ namespace CCPApp.Views
 			commentTypePicker.SelectedIndex = 0;
 			questionPicker.SelectedIndex = questionPicker.TItems.IndexOf(initialQuestion);
 
-			layout.Children.Add(chooseCommentTypeLabel);
-			layout.Children.Add(commentTypePicker);
+			double spaceBetweenQuestions = 2;
+			layout.Children.Add(
+				new StackLayout
+				{
+					Orientation = StackOrientation.Horizontal,
+					Children = 
+					{
+						new StackLayout {
+							WidthRequest = width * 2 / 3,
+							Children = 
+							{
+								chooseCommentTypeLabel,
+								commentTypePicker
+							}
+						},
+						LayoutHelper.GetHorizontalSpacing(10),
+						new StackLayout {
+							WidthRequest = width * 1 / 3,
+							Children = 
+							{
+								chooseDateLabel,
+								date
+							}
+						}
+					}
+				});
+
+			layout.Children.Add(LayoutHelper.GetVerticalSpacing(spaceBetweenQuestions));
+
 			layout.Children.Add(chooseQuestionLabel);
 			layout.Children.Add(questionPicker);
+			layout.Children.Add(LayoutHelper.GetVerticalSpacing(spaceBetweenQuestions));
+
 			layout.Children.Add(commentSubjectLabel);
 			layout.Children.Add(subjectTextEditor);
+			layout.Children.Add(LayoutHelper.GetVerticalSpacing(spaceBetweenQuestions));
+
 			layout.Children.Add(commentIndicatorLabel);
 			layout.Children.Add(commentText);
+			layout.Children.Add(LayoutHelper.GetVerticalSpacing(spaceBetweenQuestions));
+
 			layout.Children.Add(DiscussionLabel);
 			layout.Children.Add(discussionText);
+			layout.Children.Add(LayoutHelper.GetVerticalSpacing(spaceBetweenQuestions));
+
 			layout.Children.Add(RecommendationLabel);
 			layout.Children.Add(recommendationText);
-			layout.Children.Add(chooseDateLabel);
-			layout.Children.Add(date);
-			layout.Children.Add(saveButton);
-			layout.Children.Add(deleteButton);
+			layout.Children.Add(LayoutHelper.GetVerticalSpacing(spaceBetweenQuestions));
+
+			layout.Children.Add(
+				new StackLayout{
+					Orientation = StackOrientation.Horizontal,
+					HorizontalOptions = LayoutOptions.Center,
+					Children = 
+					{
+						saveButton, 
+						LayoutHelper.GetHorizontalSpacing(30),
+						deleteButton
+					}
+				});
 
 			ScrollView scroll = new ScrollView();
 			scroll.Content = layout;

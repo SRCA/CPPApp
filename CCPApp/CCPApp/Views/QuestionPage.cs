@@ -24,11 +24,11 @@ namespace CCPApp.Views
 			this.inspection = inspection;
 			StackLayout layout = new StackLayout
 			{
-				Padding = new Thickness(20,20),
+				Padding = new Thickness(20,28),
 				Spacing = 0
 				//VerticalOptions = LayoutOptions.Center,
 			};
-
+			
 			layout.Children.Add(
 				new StackLayout
 				{
@@ -46,26 +46,30 @@ namespace CCPApp.Views
 							Text = "Question " + question.numberString,
 							HorizontalOptions = LayoutOptions.EndAndExpand,
 							XAlign = TextAlignment.End,
+							FontAttributes = FontAttributes.Bold
 						}
 					}
 				}
 			);
 
 			// Part
-			layout.Children.Add(
-				new StackLayout
-				{
-					Orientation = StackOrientation.Horizontal,
-					Children =
+			if (question.SectionPartId != null)
+			{
+				layout.Children.Add(
+					new StackLayout
+					{
+						Orientation = StackOrientation.Horizontal,
+						Children =
 					{
 						new Label {
 							Text = "Part " + question.part.Label + ": " + question.part.Description
 						}
 					}
-				});
+					});
+			}
 
-			layout.Children.Add(GetSpacing(20));
-			layout.Children.Add(GetHorizontalLine());
+			layout.Children.Add(LayoutHelper.GetVerticalSpacing(20));
+			layout.Children.Add(LayoutHelper.GetHorizontalLine());
 
 			// Question text
 			layout.Children.Add(
@@ -81,7 +85,7 @@ namespace CCPApp.Views
 						}
 					}
 				});
-			layout.Children.Add(GetHorizontalLine());
+			layout.Children.Add(LayoutHelper.GetHorizontalLine());
 
 			//Add Edit Comment Button
 			Button commentButton = new Button();
@@ -91,7 +95,7 @@ namespace CCPApp.Views
 			commentButton.HorizontalOptions = LayoutOptions.End;
 			layout.Children.Add(commentButton);
 
-			layout.Children.Add(GetSpacing(5));
+			layout.Children.Add(LayoutHelper.GetVerticalSpacing(5));
 
 			//Answer
 			score = inspection.GetScoreForQuestion(question);
@@ -112,18 +116,15 @@ namespace CCPApp.Views
 					ItemsSource = answers.Select(x => EnumDescriptionAttribute.GetDescriptionFromEnumValue(x)),
 					SelectedIndex = HasScore == true ? answers.FindIndex(x => x.Equals(score.answer)) : -1
 				};
+			answerRadioGroup.Spacing = 12;
 			answerRadioGroup.CheckedChanged += answerRadioGroup_CheckedChanged;
 			answerRadioGroup.ItemUnchecked += answerRadioGroup_Unchecked;
 			
-			if(question.Number == 1)
-			{ 
 			layout.Children.Add(new StackLayout { 
-				Padding = new Thickness(25, 0),
 				Children = { answerRadioGroup }
 			});
-			}
 
-			layout.Children.Add(GetSpacing(25));
+			layout.Children.Add(LayoutHelper.GetVerticalSpacing(25));
 
 			// References label
 			layout.Children.Add(new Label
@@ -131,8 +132,8 @@ namespace CCPApp.Views
 				Text = "References:",
 				FontAttributes = FontAttributes.Bold
 			});
-			layout.Children.Add(GetSpacing(5));
-			layout.Children.Add(GetHorizontalLine());
+			layout.Children.Add(LayoutHelper.GetVerticalSpacing(5));
+			layout.Children.Add(LayoutHelper.GetHorizontalLine());
 
 			//References buttons
 			List<Reference> references = question.References;
@@ -144,22 +145,22 @@ namespace CCPApp.Views
 
 			foreach (Reference reference in references)
 			{
-				var referenceButton = new ReferenceButton(reference) { folderName = inspection.ChecklistId, FontAttributes = FontAttributes.Italic};
+				var referenceButton = new ReferenceButton(reference) { folderName = inspection.ChecklistId, FontAttributes = FontAttributes.Italic, HorizontalOptions = LayoutOptions.StartAndExpand};
 				layout.Children.Add(
 					new StackLayout
 					{
 						Orientation = StackOrientation.Horizontal,
-						Padding = new Thickness(25, 0),
+						Padding = new Thickness(24, 0),
 						HeightRequest = 30,
 						Children = 
 						{
-							new Label { TextColor = referenceButton.TextColor, FontSize = 40, WidthRequest = 24, XAlign = TextAlignment.Center, Text = "\u2022" },
+							new Label { TextColor = Color.FromHex("#2b90ff"), FontSize = 40, XAlign = TextAlignment.Center, Text = "\u2022"},
+							LayoutHelper.GetHorizontalSpacing(8),
 							referenceButton
 						}
 					});
 			}
-
-			layout.Children.Add(GetSpacing(25));
+			layout.Children.Add(LayoutHelper.GetVerticalSpacing(25));
 
 
 			//Remarks label
@@ -262,22 +263,6 @@ namespace CCPApp.Views
 			});
 		}
 
-		private BoxView GetHorizontalLine()
-		{
-			return new BoxView
-				{
-					HeightRequest = 1,
-					Color = Color.Black
-				};
-		}
-
-		private BoxView GetSpacing(double heightRequest)
-		{
-			return new BoxView
-			{
-				HeightRequest = heightRequest
-			};
-		}
 	}
 
 	internal class AnswerChoice

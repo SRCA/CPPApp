@@ -61,6 +61,7 @@
     <Compile Include="Models\QuestionModel.cs" />
     <Compile Include="Models\ScoredQuestion.cs" />
     <Compile Include="Utilities\IValuesHelper.cs" />
+    <Compile Include="Utilities\LayoutHelper.cs" />
     <Compile Include="Utilities\ScoringHelper.cs" />
     <Compile Include="Views\ChecklistPage.cs" />
     <Compile Include="Views\CommentPage.cs" />

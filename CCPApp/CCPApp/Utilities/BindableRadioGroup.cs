@@ -28,7 +28,7 @@ namespace CCPApp.Utilities
 
      
         public static BindableProperty SelectedIndexProperty =
-            BindableProperty.Create<BindableRadioGroup, int>(o => o.SelectedIndex, default(int), BindingMode.TwoWay, propertyChanged:OnSelectedIndexChanged );
+            BindableProperty.Create<BindableRadioGroup, int>(o => o.SelectedIndex, -1, BindingMode.TwoWay, propertyChanged:OnSelectedIndexChanged );
 
         public IEnumerable ItemsSource
         {

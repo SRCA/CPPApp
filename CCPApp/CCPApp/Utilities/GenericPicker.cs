@@ -9,6 +9,12 @@ namespace CCPApp.Utilities
 {
 	public class GenericPicker<T> : Picker
 	{
+		public GenericPicker()
+		{
+			Focused += genericPicker_Focused;
+			Unfocused += genericPicker_Unfocused;
+		}
+
 		public List<T> TItems = new List<T>();
 
 		/// <summary>
@@ -28,7 +34,7 @@ namespace CCPApp.Utilities
 			TItems.Clear();
 			Items.Clear();
 		}
-
+		
 		/// <summary>
 		/// Gets the currently selected item
 		/// </summary>
@@ -50,6 +56,16 @@ namespace CCPApp.Utilities
 				}
 				throw new KeyNotFoundException("The selected item is not in the collection.");
 			}
+		}
+
+		void genericPicker_Unfocused(object sender, FocusEventArgs e)
+		{
+			((Picker)sender).BackgroundColor = Color.Default;
+		}
+
+		void genericPicker_Focused(object sender, FocusEventArgs e)
+		{
+			((Picker)sender).BackgroundColor = App.VisualElementIsFocusedColor;
 		}
 	}
 }

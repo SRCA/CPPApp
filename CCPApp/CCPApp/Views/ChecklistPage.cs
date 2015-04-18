@@ -52,8 +52,9 @@ namespace CCPApp.Views
 			ViewCell createInspectionButtonView = new ViewCell();
 			createInspectionButtonView.View = createInspectionButton;
 
-			section.Add(cells);
+
 			section.Add(createInspectionButtonView);
+			section.Add(cells);
 			root.Add(section);
 			view.Root = root;
 

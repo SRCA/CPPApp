@@ -25,6 +25,9 @@ namespace CCPApp.iOS.Renderers
 				layer.BorderWidth = 1F;
 				layer.BorderColor = UIColor.Black.CGColor;
 				layer.CornerRadius = 8;
+
+				// Internally setting for now. Should make into a property.
+				Control.Font = UIFont.SystemFontOfSize(17f);
 			}
 		}
 	}

@@ -41,7 +41,7 @@ namespace CCPApp.iOS.Renderers
 
         void AdjustEdgeInsets()
         {
-            const float inset = 8f;
+            const float inset = 18f;
 
             this.HorizontalAlignment = UIControlContentHorizontalAlignment.Left;
             this.ImageEdgeInsets = new UIEdgeInsets(0f, inset, 0f, 0f);

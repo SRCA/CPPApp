@@ -172,7 +172,7 @@ namespace CCPApp.Views
 
 		void genericPicker_Focused(object sender, FocusEventArgs e)
 		{
-			((Picker)sender).BackgroundColor = App.IsFocusedColor;
+			((Picker)sender).BackgroundColor = App.VisualElementIsFocusedColor;
 		}
 
 		void SaveComment(object sender, EventArgs e)

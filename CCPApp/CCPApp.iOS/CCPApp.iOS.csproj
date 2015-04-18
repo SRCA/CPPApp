@@ -101,6 +101,8 @@
     <Compile Include="GeneratePdf.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Renderers\DatePickerRenderer.cs" />
+    <Compile Include="Renderers\PickerRenderer.cs" />
     <Compile Include="Renderers\EditorRenderer.cs" />
     <Compile Include="Renderers\RadioButtonRenderer.cs" />
     <Compile Include="Renderers\RadioButtonView.cs" />

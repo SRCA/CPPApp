@@ -44,7 +44,8 @@ namespace CCPApp.Views
 			commentTypePicker.AddItem(CommentType.Observation);
 			commentTypePicker.AddItem(CommentType.Commendable);
 			commentTypePicker.SelectedIndexChanged += SelectCommentType;
-
+			commentTypePicker.Focused += genericPicker_Focused;
+			commentTypePicker.Unfocused += genericPicker_Unfocused;
 
 			//Choose question
 			Label chooseQuestionLabel = new Label{Text="Choose Question:", FontAttributes = FontAttributes.Bold};
@@ -54,6 +55,8 @@ namespace CCPApp.Views
 				questionPicker.AddItem(question);
 			}
 			questionPicker.SelectedIndexChanged += SelectQuestion;
+			questionPicker.Focused += genericPicker_Focused;
+			questionPicker.Unfocused += genericPicker_Unfocused;
 
 			//Comment description
 			Label commentSubjectLabel = new Label { Text = "Subject:", FontAttributes = FontAttributes.Bold };
@@ -118,10 +121,10 @@ namespace CCPApp.Views
 								chooseDateLabel,
 								date
 							}
-						}
+						},
 					}
 				});
-
+			
 			layout.Children.Add(LayoutHelper.GetVerticalSpacing(spaceBetweenQuestions));
 
 			layout.Children.Add(chooseQuestionLabel);
@@ -160,6 +163,16 @@ namespace CCPApp.Views
 			scroll.Content = layout;
 
 			this.Content = scroll;
+		}
+
+		void genericPicker_Unfocused(object sender, FocusEventArgs e)
+		{
+			((Picker)sender).BackgroundColor = Color.Default;
+		}
+
+		void genericPicker_Focused(object sender, FocusEventArgs e)
+		{
+			((Picker)sender).BackgroundColor = App.IsFocusedColor;
 		}
 
 		void SaveComment(object sender, EventArgs e)

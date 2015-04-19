@@ -32,6 +32,7 @@ namespace CCPApp.iOS
 		{
 			Forms.Init();
 
+			UINavigationBar.Appearance.BarTintColor = Color.FromHex("#f7f7f7").ToUIColor();
 			window = new UIWindow(UIScreen.MainScreen.Bounds);
 
 			LoadApplication(new App());

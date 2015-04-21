@@ -13,7 +13,7 @@ namespace CCPApp.Views
 	{
 		public TableSection tableSection { get; set; }
 		public Inspection inspection { get; set; }
-		public ChecklistPage CallingPage { get; set; }
+		public InspectionListPage CallingPage { get; set; }
 		public GenericPicker<Inspector> inspectorPicker { get; set; }
 		public List<Inspector> selectedInspectors;
 		public List<Inspector> availableInspectors;

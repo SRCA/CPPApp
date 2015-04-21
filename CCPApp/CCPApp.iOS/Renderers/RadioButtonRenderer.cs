@@ -91,7 +91,7 @@ namespace CCPApp.iOS.Renderers
                 case "Element":
                     break;
                 default:
-                    System.Diagnostics.Debug.WriteLine("Property change for {0} has not been implemented.", e.PropertyName);
+                    //System.Diagnostics.Debug.WriteLine("Property change for {0} has not been implemented.", e.PropertyName);
                     return;
             }
         }

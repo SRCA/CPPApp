@@ -9,11 +9,11 @@ using Xamarin.Forms;
 
 namespace CCPApp.Views
 {
-	public class ChecklistPage : ContentPage
+	public class InspectionListPage : ContentPage
 	{
 		ChecklistModel checklist;
 		//public string ChecklistTitle { get; set; }
-		public ChecklistPage(ChecklistModel checklist)
+		public InspectionListPage(ChecklistModel checklist)
 		{
 			ToolbarItem inspectorButton = new ToolbarItem();
 			inspectorButton.Text = "Inspectors";

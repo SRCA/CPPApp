@@ -21,7 +21,7 @@ namespace CCPApp
 			CreateInspectionButton button = (CreateInspectionButton)sender;
 			ChecklistModel checklist = button.checklist;
 			EditInspectionPage page = new EditInspectionPage(null,checklist);
-			page.CallingPage = (ChecklistPage)button.ParentView.ParentView;
+			page.CallingPage = (InspectionListPage)button.ParentView.ParentView;
 			await App.Navigation.PushAsync(page);
 		}
 		public static async void SelectInspectionButtonClicked(object sender, EventArgs e)
@@ -65,6 +65,16 @@ namespace CCPApp
 				}
 			}
 			return pages;
+		}
+
+		public static async void InitializePages(List<QuestionPage> pages)
+		{
+			foreach (QuestionPage page in pages)
+			{
+				await Task.Delay(100).ContinueWith((task) =>{
+					page.Initialize();
+				});
+			}
 		}
 	}
 

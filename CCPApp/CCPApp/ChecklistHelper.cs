@@ -23,7 +23,7 @@ namespace CCPApp
 		public static async void ChecklistButtonClicked(object sender, EventArgs e)
 		{
 			ChecklistButton button = (ChecklistButton)sender;
-			ChecklistPage page = new ChecklistPage(button.checklist);
+			InspectionListPage page = new InspectionListPage(button.checklist);
 			await App.Navigation.PushAsync(page);
 		}
 		/// <summary>

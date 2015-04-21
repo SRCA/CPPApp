@@ -80,5 +80,10 @@ namespace CCPApp
 		{
 			return Navigation.NavigationStack.First().Bounds;
 		}
+
+		public static bool IsPortrait(Page page)
+		{
+			return page.Width < page.Height;
+		}
 	}
 }

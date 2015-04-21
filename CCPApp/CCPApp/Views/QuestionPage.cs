@@ -40,6 +40,7 @@ namespace CCPApp.Views
 
 		private void Setup()
 		{
+			SizeChanged += OnSizeChanged;
 			StackLayout layout = new StackLayout
 			{
 				Padding = new Thickness(20, 28),
@@ -192,7 +193,14 @@ namespace CCPApp.Views
 			//Remarks box
 			remarksBox = new Editor();
 			remarksBox.Text = question.Remarks;
-			remarksBox.HeightRequest = 100;
+			if (App.IsPortrait(this))
+			{
+				remarksBox.HeightRequest = 300;
+			}
+			else
+			{
+				remarksBox.HeightRequest = 100;
+			}
 			question.OldRemarks = question.Remarks;
 			remarksBox.TextChanged += SaveRemarksText;
 			layout.Children.Add(remarksBox);
@@ -200,7 +208,24 @@ namespace CCPApp.Views
 			ScrollView scroll = new ScrollView();
 			scroll.Content = layout;
 
-			Content = scroll;
+			Device.BeginInvokeOnMainThread(() =>
+			{
+				Content = scroll;
+			});
+		}
+
+		protected void OnSizeChanged(object Sender, EventArgs e)
+		{
+			double height;
+			if (App.IsPortrait(this))
+			{
+				height = 300;
+			}
+			else
+			{
+				height = 100;
+			}
+			remarksBox.HeightRequest = height;
 		}
 
 		void answerRadioGroup_Unchecked(object sender, int e)

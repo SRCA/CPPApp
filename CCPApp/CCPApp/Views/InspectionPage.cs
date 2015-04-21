@@ -214,7 +214,9 @@ namespace CCPApp.Views
 		{
 			this.CurrentPage = this.Children.Single(p => ((PartPage)p).GetPart().Id == question.part.Id);
 			PartPage partPage = (PartPage)this.CurrentPage;
-			partPage.CurrentPage = partPage.Children.Single(q => ((QuestionPage)q).question.Id == question.Id);
+			ContentPage questionPage = partPage.Children.Single(q => ((QuestionPage)q).question.Id == question.Id);
+			(questionPage as QuestionPage).Initialize();
+			partPage.CurrentPage = questionPage;
 		}
 		public SectionModel GetCurrentSection()
 		{
@@ -282,6 +284,7 @@ namespace CCPApp.Views
 				{
 					Children.Add(page);
 				}
+				//InspectionHelper.InitializePages(pages);
 			}
 		}
 		public Question GetCurrentQuestion()
@@ -290,7 +293,9 @@ namespace CCPApp.Views
 		}
 		public void SetSelectedQuestion(Question question)
 		{
-			this.CurrentPage = this.Children.Single(q => ((QuestionPage)q).question.Id == question.Id);
+			ContentPage page = this.Children.Single(q => ((QuestionPage)q).question.Id == question.Id);
+			(page as QuestionPage).Initialize();
+			this.CurrentPage = page;
 		}
 		public SectionModel GetCurrentSection()
 		{
@@ -323,15 +328,26 @@ namespace CCPApp.Views
 			else
 			{
 				int index = questions.IndexOf(question);
-				this.CurrentPage = this.Children.ElementAt(index + 1);
+				QuestionPage page = this.Children.ElementAt(index + 1) as QuestionPage;
+				page.Initialize();
+				this.CurrentPage = page;
 			}
 		}
 		protected override void OnCurrentPageChanged()
 		{
-			QuestionPage page = SelectedItem as QuestionPage;
+			QuestionPage page = CurrentPage as QuestionPage;
 			if (page != null)
 			{
 				page.Initialize();
+				int index = Children.IndexOf(CurrentPage);
+				if (index > 0)
+				{
+					(Children.ElementAt(index - 1) as QuestionPage).Initialize();
+				}
+				if (index < Children.Count - 1)
+				{
+					(Children.ElementAt(index + 1) as QuestionPage).Initialize();
+				}
 			}
 			inspection.SetLastViewedQuestion(GetCurrentQuestion());
 			base.OnCurrentPageChanged();
@@ -352,6 +368,7 @@ namespace CCPApp.Views
 			{
 				Children.Add(page);
 			}
+			//InspectionHelper.InitializePages(pages);
 			UpdateIcon();
 			this.CurrentPageChanged += PartPage_CurrentPageChanged;
 		}
@@ -390,8 +407,28 @@ namespace CCPApp.Views
 			else
 			{
 				int index = questions.IndexOf(question);
-				this.CurrentPage = this.Children.ElementAt(index + 1);
+				QuestionPage page = this.Children.ElementAt(index + 1) as QuestionPage;
+				page.Initialize();
+				this.CurrentPage = page;
 			}
+		}
+		protected override void OnCurrentPageChanged()
+		{
+			QuestionPage page = CurrentPage as QuestionPage;
+			if (page != null)
+			{
+				page.Initialize();
+				int index = Children.IndexOf(CurrentPage);
+				if (index > 0)
+				{
+					(Children.ElementAt(index - 1) as QuestionPage).Initialize();
+				}
+				if (index < Children.Count - 1)
+				{
+					(Children.ElementAt(index + 1) as QuestionPage).Initialize();
+				}
+			}
+			base.OnCurrentPageChanged();
 		}
 	}
 }

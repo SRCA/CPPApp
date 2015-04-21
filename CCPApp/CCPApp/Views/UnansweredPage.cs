@@ -35,11 +35,24 @@ namespace CCPApp.Views
 			view.ItemTemplate = new DataTemplate(() =>
 			{
 				GoToQuestionButton button = new GoToQuestionButton(inspectionPage);
+				button.SetBinding(Button.TextProperty, "ToStringForListing");//FullString
+				button.SetBinding(GoToQuestionButton.QuestionProperty, "SelfReference");
+				button.HorizontalOptions = LayoutOptions.StartAndExpand;
+
+				StackLayout stack = new StackLayout();
+				stack.Padding = new Thickness(20, 0);
+				stack.Children.Add(button);
+
+				ViewCell cell = new ViewCell();
+				cell.View = stack;
+				return cell;
+
+				/*GoToQuestionButton button = new GoToQuestionButton(inspectionPage);
 				button.SetBinding(Button.TextProperty,"FullString");
 				button.SetBinding(GoToQuestionButton.QuestionProperty, "SelfReference");
 				ViewCell cell = new ViewCell();
 				cell.View = button;
-				return cell;
+				return cell;*/
 			});
 
 			/*foreach (Question question in questions)

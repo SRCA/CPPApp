@@ -17,18 +17,36 @@ namespace CCPApp.Views
 		Editor remarksBox;
 		public ISectionPage sectionPage { get; set; }
 		public bool HasScore = false;
+		bool initialized = false;
+		string textOverride = null;
+		List<Reference> extraReferences = null;
+
+		public  void Initialize()
+		{
+			if (!initialized)
+			{
+				Setup();
+				initialized = true;
+			}
+		}
 
 		public QuestionPage(Question question, Inspection inspection, string textOverride = null, List<Reference> extraReferences = null)
 		{
 			this.question = question;
 			this.inspection = inspection;
+			this.textOverride = textOverride;
+			this.extraReferences = extraReferences;
+		}
+
+		private void Setup()
+		{
 			StackLayout layout = new StackLayout
 			{
-				Padding = new Thickness(20,28),
+				Padding = new Thickness(20, 28),
 				Spacing = 0
 				//VerticalOptions = LayoutOptions.Center,
 			};
-			
+
 			layout.Children.Add(
 				new StackLayout
 				{
@@ -112,15 +130,16 @@ namespace CCPApp.Views
 			// Answers - Radio Group
 			var answers = Enum.GetValues(typeof(Answer)).Cast<Answer>().ToList();
 			var answerRadioGroup = new BindableRadioGroup
-				{
-					ItemsSource = answers.Select(x => EnumDescriptionAttribute.GetDescriptionFromEnumValue(x)),
-					SelectedIndex = HasScore == true ? answers.FindIndex(x => x.Equals(score.answer)) : -1
-				};
+			{
+				ItemsSource = answers.Select(x => EnumDescriptionAttribute.GetDescriptionFromEnumValue(x)),
+				SelectedIndex = HasScore == true ? answers.FindIndex(x => x.Equals(score.answer)) : -1
+			};
 			answerRadioGroup.Spacing = 12;
 			answerRadioGroup.CheckedChanged += answerRadioGroup_CheckedChanged;
 			answerRadioGroup.ItemUnchecked += answerRadioGroup_Unchecked;
-			
-			layout.Children.Add(new StackLayout { 
+
+			layout.Children.Add(new StackLayout
+			{
 				Children = { answerRadioGroup }
 			});
 
@@ -145,7 +164,7 @@ namespace CCPApp.Views
 
 			foreach (Reference reference in references)
 			{
-				var referenceButton = new ReferenceButton(reference) { folderName = inspection.ChecklistId, FontAttributes = FontAttributes.Italic, HorizontalOptions = LayoutOptions.StartAndExpand};
+				var referenceButton = new ReferenceButton(reference) { folderName = inspection.ChecklistId, FontAttributes = FontAttributes.Italic, HorizontalOptions = LayoutOptions.StartAndExpand };
 				layout.Children.Add(
 					new StackLayout
 					{
@@ -224,8 +243,15 @@ namespace CCPApp.Views
 			score.answer = answer;
 			App.database.SaveScore(score);
 			HasScore = true;
-			sectionPage.UpdateIcon(true);
-			sectionPage.AutoAdvance(question);
+			sectionPage.UpdateIcon();
+
+			Task.Delay(100).ContinueWith((task) =>
+			{
+				Device.BeginInvokeOnMainThread(() =>
+				{
+					sectionPage.AutoAdvance(question);
+				});
+			});
 		}
 
 		private void clearScores()
@@ -236,7 +262,7 @@ namespace CCPApp.Views
 				App.database.DeleteScore(score);
 			}
 			HasScore = false;
-			sectionPage.UpdateIcon(false);
+			sectionPage.UpdateIcon();
 		}
 
 		private void openCommentPage(object sender, EventArgs e)

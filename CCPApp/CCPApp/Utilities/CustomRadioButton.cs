@@ -52,8 +52,7 @@ namespace CCPApp.Utilities
                 this.SetValue(CheckedProperty, value);
                 var eventHandler = this.CheckedChanged;
                 if (eventHandler != null)
-                {
-                   
+                {                   
                     eventHandler.Invoke(this, value);
                 }
             }
@@ -85,7 +84,7 @@ namespace CCPApp.Utilities
             }
         }
 
-        public int Id { get; set; }   
+        new public int Id { get; set; }
     
 		public void Highlight (bool highlight)
 		{

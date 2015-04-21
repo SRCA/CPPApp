@@ -12,6 +12,10 @@ namespace CCPApp
 {
 	public class InspectionHelper
 	{
+		public static string EmptyCircleFileName = "EmptyCircle.png";
+		public static string HalfCircleFileName = "HalfCircle.png";
+		public static string CheckmarkFileName = "Checkmark2.png";
+
 		public static async void CreateInspectionButtonClicked(object sender, EventArgs e)
 		{
 			CreateInspectionButton button = (CreateInspectionButton)sender;
@@ -20,15 +24,15 @@ namespace CCPApp
 			page.CallingPage = (ChecklistPage)button.ParentView.ParentView;
 			await App.Navigation.PushAsync(page);
 		}
-		public static void SelectInspectionButtonClicked(object sender, EventArgs e)
+		public static async void SelectInspectionButtonClicked(object sender, EventArgs e)
 		{
 			InspectionButton button = (InspectionButton)sender;
 			Inspection inspection = button.inspection;
-			Device.BeginInvokeOnMainThread(async () =>
-			{
+			//Device.BeginInvokeOnMainThread(async () =>
+			//{
 				InspectionPage page = new InspectionPage(inspection);
 				await App.Navigation.PushAsync(page);
-			});
+			//});
 		}
 
 		internal static List<QuestionPage> GenerateQuestionPages(List<Question> questions, Inspection inspection, ISectionPage sectionPage)

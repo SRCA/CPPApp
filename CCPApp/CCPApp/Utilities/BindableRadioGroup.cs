@@ -17,11 +17,8 @@ namespace CCPApp.Utilities
 
         public BindableRadioGroup()
         {
-
             rads = new List<CustomRadioButton>();
         }
-
-
 
         public static BindableProperty ItemsSourceProperty =
             BindableProperty.Create<BindableRadioGroup, IEnumerable>(o => o.ItemsSource, default(IEnumerable), propertyChanged: OnItemsSourceChanged);
@@ -83,8 +80,7 @@ namespace CCPApp.Utilities
 				{
 					selectedRad.Highlight(false);
 					ItemUnchecked.Invoke(sender, 0);
-				}
-				
+				}				
 				return;
 			}
 
@@ -100,10 +96,8 @@ namespace CCPApp.Utilities
 					rad.Highlight(true);
 					if(CheckedChanged != null)
                     	CheckedChanged.Invoke(sender, rad.Id); 
-                }
-                
+                }                
             }
-
         }
 
         private static void OnSelectedIndexChanged(BindableObject bindable, int oldvalue, int newvalue)
@@ -118,12 +112,8 @@ namespace CCPApp.Utilities
                 if (rad.Id == bindableRadioGroup.SelectedIndex)
                 {
                     rad.Checked = true;
-                }
-               
+                }               
             }
-
-
-        }
-    
+        }    
     }
 }

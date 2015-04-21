@@ -26,7 +26,6 @@ namespace CCPApp
 			MainPage = new NavigationPage(frontPage);
 			Navigation = MainPage.Navigation;
 
-
 			// Create styles for controls
 			VisualElementIsFocusedColor = Color.FromHex("#E0F7E0");
 
@@ -76,8 +75,6 @@ namespace CCPApp
 			resourceDictionary.Add(entryStyle);
 
 			Application.Current.Resources = resourceDictionary;
-			
-
 		}
 		public static Rectangle GetPageBounds()
 		{

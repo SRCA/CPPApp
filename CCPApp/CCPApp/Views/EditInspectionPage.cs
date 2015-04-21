@@ -9,7 +9,7 @@ using Xamarin.Forms;
 
 namespace CCPApp.Views
 {
-	public class EditInspectionPage : ContentPage
+	public class EditInspectionPage : ContentPage, IInspectorHolder
 	{
 		public TableSection tableSection { get; set; }
 		public Inspection inspection { get; set; }
@@ -21,6 +21,11 @@ namespace CCPApp.Views
 		public ListView selectedListView;
 		public EditInspectionPage(Inspection existingInspection = null, ChecklistModel checklist = null)
 		{
+			/*ToolbarItem inspectorButton = new ToolbarItem();
+			inspectorButton.Text = "Inspectors";
+			inspectorButton.Clicked += InspectorHelper.openInspectorsPage;
+			ToolbarItems.Add(inspectorButton);*/
+
 			Padding = new Thickness(0, 5, 0, 0);
 			if (existingInspection == null)
 			{
@@ -142,6 +147,10 @@ namespace CCPApp.Views
 			SaveCell.View = saveButton;
 			//CancelCell.View = cancelButton;
 
+			Button createInspectorsButton = new Button();
+			createInspectorsButton.Text = "New Inspector";
+			createInspectorsButton.Clicked += openCreateInspectorPage;
+
 			section.Add(NameCell);
 			layout.Children.Add(nameLayout);
 			section.Add(OrganizationCell);
@@ -150,6 +159,7 @@ namespace CCPApp.Views
 			layout.Children.Add(inspectorsLayout);
 			section.Add(inspectorsCell);
 			section.Add(SaveCell);
+			layout.Children.Add(createInspectorsButton);
 			layout.Children.Add(saveButton);
 			//section.Add(CancelCell);
 			root.Add(section);
@@ -203,6 +213,26 @@ namespace CCPApp.Views
 				cell.View = button;
 				return cell;
 			});
+		}
+
+		public async void openCreateInspectorPage(object sender, EventArgs e)
+		{
+			EditInspectorPage page = new EditInspectorPage();
+			page.CallingPage = this;
+
+			await App.Navigation.PushModalAsync(page);
+		}
+		public void ResetInspectors()
+		{
+			foreach (Inspector inspector in App.database.LoadAllInspectors())
+			{
+				if (!selectedInspectors.Any(i => i.Id == inspector.Id) && !availableInspectors.Any(i => i.Id == inspector.Id))
+				{
+					//There shouldn't be more than 1 new inspector at a time.
+					availableInspectors.Insert(availableInspectors.Count - 1, inspector);
+					EditInspectionPage.UpdateInspectorListView(availableInspectors, availableListView, this);
+				}
+			}
 		}
 	}
 	internal class InspectorButton : Button

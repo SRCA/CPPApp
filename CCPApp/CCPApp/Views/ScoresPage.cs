@@ -68,7 +68,7 @@ namespace CCPApp.Views
 			double cumulativeScore = ScoringHelper.ScoreInspection(inspection).Item3;
 			Label cumulativeScoreLabel = new Label
 			{
-				Text = "Cumulative Score: " + (cumulativeScore * 100).ToString("0.00") + "%",
+				Text = "  Cumulative Score: " + (cumulativeScore * 100).ToString("0.00") + "%",
 				TextColor = Color.White
 			};
 			setScoresColor(cumulativeScore, cumulativeScoreLabel);
@@ -94,7 +94,7 @@ namespace CCPApp.Views
 			GenericPicker<SectionModel> picker = (GenericPicker<SectionModel>)sender;
 			SectionModel section = picker.SelectedItem;
 			double sectionScore = ScoringHelper.ScoreSection(section, inspection).Item3;
-			sectionScoreLabel.Text = "Section score: " + (sectionScore * 100).ToString("0.00") + "%";
+			sectionScoreLabel.Text = "  Section score: " + (sectionScore * 100).ToString("0.00") + "%";
 			setScoresColor(sectionScore, sectionScoreLabel);
 			if (section.SectionParts.Count == 0)
 			{
@@ -125,7 +125,7 @@ namespace CCPApp.Views
 			}
 			SectionPart part = picker.SelectedItem;
 			double partScore = ScoringHelper.ScorePart(part, inspection).Item3;
-			partScoreLabel.Text = "Part score: " + (partScore * 100).ToString("0.00") + "%";
+			partScoreLabel.Text = "  Part score: " + (partScore * 100).ToString("0.00") + "%";
 			setScoresColor(partScore, partScoreLabel);
 		}
 		private void setScoresColor(double score, VisualElement element)

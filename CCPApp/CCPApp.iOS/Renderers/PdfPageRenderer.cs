@@ -55,8 +55,6 @@ namespace CCPApp.iOS.Renderers
 			webView.ScalesPageToFit = true;
 
 			View = webView;
-
-
 		}
 		public override void ViewDidAppear(bool animated)
 		{

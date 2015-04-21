@@ -20,6 +20,7 @@ namespace CCPApp.Views
 			inspectorButton.Clicked += InspectorHelper.openInspectorsPage;
 			ToolbarItems.Add(inspectorButton);
 			Title = checklist.Title;
+			NavigationPage.SetBackButtonTitle(this, "Inspection list");
 			this.checklist = checklist;
 			ResetInspections();
 		}
@@ -27,7 +28,7 @@ namespace CCPApp.Views
 		{
 			TableView view = new TableView();
 			view.Intent = TableIntent.Menu;
-			TableRoot root = new TableRoot("Inspections for " + Title);
+			TableRoot root = new TableRoot("Inspections list");
 			TableSection section = new TableSection();
 			List<ViewCell> cells = new List<ViewCell>();
 			foreach (Inspection inspection in checklist.Inspections)

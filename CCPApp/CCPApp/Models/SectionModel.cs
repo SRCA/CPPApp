@@ -98,6 +98,14 @@ namespace CCPApp.Models
 		{
 			return "Part " + Label + ": " + Description;
 		}
+
+		public IEnumerable<Question> ScorableQuestions
+		{
+			get
+			{
+				return Questions.Where(q => !q.HasSubItems);
+			}
+		}
 	}
 
 	/// <summary>

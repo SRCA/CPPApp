@@ -439,7 +439,7 @@ namespace CCPApp.iOS
 
 			//loop through questions
 			int numberOfPlacedQuestions = 0;
-			float maximumHeight = 580;
+			float maximumHeight = 590;
 			while(true)
 			{
 				int questionIndex = nextQuestionIndex + numberOfPlacedQuestions;
@@ -478,11 +478,10 @@ namespace CCPApp.iOS
 				referenceCell.DisableBorderSide(Rectangle.TOP_BORDER);
 
 				questionCell.MinimumHeight = question.HasSubItems ? 20 : 40;
-				if (table.TotalHeight + questionCell.Height + referenceCell.Height > maximumHeight)
-				{	//There is not enough room for this question.  Return!
-					break;
-				}
-
+				//if (table.TotalHeight + questionCell.Height + referenceCell.Height > maximumHeight)
+				//{	//There is not enough room for this question.  Return!
+				//	break;
+				//}
 				table.AddCell(numberCell);
 				table.AddCell(questionCell);
 
@@ -508,6 +507,14 @@ namespace CCPApp.iOS
 					table.AddCell(remarksCell);
 				}
 				table.AddCell(referenceCell);
+
+				if (table.TotalHeight > maximumHeight)
+				{
+					//There is not enough room for this question.  Return!
+					table.DeleteLastRow();
+					table.DeleteLastRow();
+					break;
+				}
 
 				numberOfPlacedQuestions++;
 				if (questionIndex == questions.Count - 1)

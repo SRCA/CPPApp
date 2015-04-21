@@ -41,7 +41,8 @@ namespace CCPApp.Models
 
 		public override string ToString()
 		{
-			string prefix;
+			return section.Label + stringWithoutSection;
+			/*string prefix;
 			if (part != null)
 			{
 				prefix = section.Label + "-" + part.Label;
@@ -50,7 +51,21 @@ namespace CCPApp.Models
 			{
 				prefix = section.Label;
 			}
-			return prefix + "-" + numberString;
+			return prefix + "-" + numberString;*/
+		}
+		public string stringWithoutSection
+		{
+			get
+			{
+				if (part == null)
+				{
+					return numberString;
+				}
+				else
+				{
+					return part.Label + "-" + numberString;
+				}
+			}
 		}
 		public string numberString
 		{
@@ -67,6 +82,24 @@ namespace CCPApp.Models
 		public Question()
 		{
 			References = new List<Reference>();
+		}
+
+		public string ToStringForListing
+		{
+			get
+			{
+				Question master = MasterQuestion;
+				if (master == null)
+				{
+					return "Section " + section.Label + ": " + section.Title + ", Question: "+stringWithoutSection;
+					//return ToString() + "Section " + section.Label + ": " + Text + ", ";
+				}
+				else
+				{
+					return "Section " + section.Label + ": " + section.Title + ", Question: " + stringWithoutSection;
+					//return ToString() + "Section " + master.section.Label + ": " + Text + ", ";
+				}
+			}
 		}
 
 		public string FullString

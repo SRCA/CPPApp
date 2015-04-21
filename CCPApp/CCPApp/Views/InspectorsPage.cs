@@ -9,7 +9,7 @@ using Xamarin.Forms;
 
 namespace CCPApp.Views
 {
-	public class InspectorsPage : ContentPage
+	public class InspectorsPage : ContentPage, IInspectorHolder
 	{
 		public InspectorsPage()
 		{
@@ -77,7 +77,7 @@ namespace CCPApp.Views
 
 	public class EditInspectorPage : ContentPage
 	{
-		public InspectorsPage CallingPage { get; set; }
+		public IInspectorHolder CallingPage { get; set; }
 		private Inspector inspector;
 		EntryCell NameCell;
 

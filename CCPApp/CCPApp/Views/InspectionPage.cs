@@ -18,6 +18,7 @@ namespace CCPApp.Views
 		public InspectionPage(Inspection inspection)
 		{
 			this.inspection = inspection;
+			Title = inspection.Name;
 
 			/*ToolbarItem scoreButton = new ToolbarItem();
 			scoreButton.Text = "Scores";
@@ -166,7 +167,7 @@ namespace CCPApp.Views
 		/// Checks to see if the icon needs to be updated and, if so, updates it.
 		/// </summary>
 		/// <param name="answered">True if a question has just been answered, false if one has just been cleared</param>
-		void UpdateIcon(bool answered);
+		void UpdateIcon();
 		void AutoAdvance(Question question);
 	}
 	internal class SectionWithPartsPage : TabbedPage, ISectionPage
@@ -179,13 +180,18 @@ namespace CCPApp.Views
 			this.section = section;
 			this.inspection = inspection;
 			Title = section.ShortTitle;
-			if (section.AllScorableQuestions().Count == inspection.scores.Count(s => s.question.section == section))
+			int scoredQuestions = inspection.scores.Count(s => s.question.section == section);
+			if (section.AllScorableQuestions().Count == scoredQuestions)
 			{
-				Icon = "Checkmark2.png";
+				Icon = InspectionHelper.CheckmarkFileName;
+			}
+			else if (scoredQuestions > 0)
+			{
+				Icon = InspectionHelper.HalfCircleFileName;
 			}
 			else
 			{
-				Icon = "TabIconGreenNoBG.png";
+				Icon = InspectionHelper.EmptyCircleFileName;
 			}
 		}
 		public void Initialize()
@@ -214,22 +220,26 @@ namespace CCPApp.Views
 		{
 			return section;
 		}
-		public void UpdateIcon(bool answered)
+		public void UpdateIcon()
 		{
-			((PartPage)CurrentPage).UpdateIcon(answered);
-			if (!answered)
+			((PartPage)CurrentPage).UpdateIcon();
+			int scoredQuestions = inspection.scores.Count(s => s.question.section == section);
+			if (scoredQuestions == 0)
 			{
-				Icon = "TabIconGreenNoBG.png";
-				return;
+				Icon = InspectionHelper.EmptyCircleFileName;
 			}
-			if (section.AllScorableQuestions().Count == inspection.scores.Count(s => s.question.section == section))
+			else if (scoredQuestions == section.AllScorableQuestions().Count)
 			{
-				Icon = "Checkmark2.png";
+				Icon = InspectionHelper.CheckmarkFileName;
+			}
+			else
+			{
+				Icon = InspectionHelper.HalfCircleFileName;
 			}
 		}
 		public void AutoAdvance(Question question)
 		{
-			//TODO
+			((PartPage)CurrentPage).AutoAdvance(question);
 		}
 		protected override void OnCurrentPageChanged()
 		{
@@ -247,19 +257,19 @@ namespace CCPApp.Views
 			this.section = section;
 			this.inspection = inspection;
 			Title = section.ShortTitle;
-			if (section.AllScorableQuestions().Count == inspection.scores.Count(s => s.question.section == section))
+			int scoredQuestions = inspection.scores.Count(s => s.question.section == section);
+			if (section.AllScorableQuestions().Count == scoredQuestions)
 			{
-				Icon = "Checkmark2.png";
+				Icon = InspectionHelper.CheckmarkFileName;
+			}
+			else if (scoredQuestions > 0)
+			{
+				Icon = InspectionHelper.HalfCircleFileName;
 			}
 			else
 			{
-				Icon = "TabIconGreenNoBG.png";
+				Icon = InspectionHelper.EmptyCircleFileName;
 			}
-			/*foreach (Question question in section.Questions)
-			{
-				QuestionPage page = new QuestionPage(question);
-				Children.Add(page);
-			}*/
 		}
 		public void Initialize()
 		{
@@ -286,20 +296,21 @@ namespace CCPApp.Views
 		{
 			return section;
 		}
-		public void UpdateIcon(bool answered)
+		public void UpdateIcon()
 		{
-			if (!answered)
+			int scoredQuestions = Children.Cast<QuestionPage>().Count(p => p.HasScore);
+			if (scoredQuestions == 0)
 			{
-				//They cleared one.  Clearly the checklist is still in progress.  Currently we only have two states.
-				//Set icon to in progress if it's not already.
-				Icon = "TabIconGreenNoBG.png";
-				return;
+				Icon = InspectionHelper.EmptyCircleFileName;
 			}
-			if (Children.Cast<QuestionPage>().All(p => p.HasScore))
+			else if (scoredQuestions == Children.Count)
 			{
-				Icon = "Checkmark2.png";
+				Icon = InspectionHelper.CheckmarkFileName;
 			}
-			//set icon to done if it's not already.
+			else
+			{
+				Icon = InspectionHelper.HalfCircleFileName;
+			}
 		}
 		public void AutoAdvance(Question question)
 		{
@@ -317,6 +328,11 @@ namespace CCPApp.Views
 		}
 		protected override void OnCurrentPageChanged()
 		{
+			QuestionPage page = SelectedItem as QuestionPage;
+			if (page != null)
+			{
+				page.Initialize();
+			}
 			inspection.SetLastViewedQuestion(GetCurrentQuestion());
 			base.OnCurrentPageChanged();
 		}
@@ -331,13 +347,12 @@ namespace CCPApp.Views
 			this.part = part;
 			this.inspection = inspection;
 			Title = "Part " + part.Label;
-			Icon = "TabIconGreenNoBG.png";
 			List<QuestionPage> pages = InspectionHelper.GenerateQuestionPages(part.Questions, inspection, sectionPage);
 			foreach (ContentPage page in pages)
 			{
 				Children.Add(page);
 			}
-			UpdateIcon(true);
+			UpdateIcon();
 			this.CurrentPageChanged += PartPage_CurrentPageChanged;
 		}
 		public SectionPart GetPart()
@@ -348,15 +363,34 @@ namespace CCPApp.Views
 		{
 			inspection.SetLastViewedQuestion(((QuestionPage)CurrentPage).question);
 		}
-		public void UpdateIcon(bool answered)
+		public void UpdateIcon()
 		{
-			if (!answered)
+			int scoredQuestions = Children.Cast<QuestionPage>().Count(p => p.HasScore);
+			if (scoredQuestions == 0)
 			{
-				Icon = "TabIconGreenNoBG.png";
+				Icon = InspectionHelper.EmptyCircleFileName;
 			}
-			if (Children.Cast<QuestionPage>().All(p => p.HasScore))
+			else if (scoredQuestions == Children.Count)
 			{
-				Icon = "Checkmark2.png";
+				Icon = InspectionHelper.CheckmarkFileName;
+			}
+			else
+			{
+				Icon = InspectionHelper.HalfCircleFileName;
+			}
+		}
+		public void AutoAdvance(Question question)
+		{
+			List<Question> questions = part.ScorableQuestions.ToList();
+			if (question.Id == questions.Last().Id)
+			{
+				//I could just do nothing, or I could go to the next part.  Or, like, go to the scores page.
+				return;
+			}
+			else
+			{
+				int index = questions.IndexOf(question);
+				this.CurrentPage = this.Children.ElementAt(index + 1);
 			}
 		}
 	}

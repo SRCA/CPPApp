@@ -14,7 +14,7 @@ namespace CCPApp.Views
 		public TableSection tableSection { get; set; }
 		public Inspection inspection { get; set; }
 		public InspectionListPage CallingPage { get; set; }
-		public GenericPicker<Inspector> inspectorPicker { get; set; }
+		//public GenericPicker<Inspector> inspectorPicker { get; set; }
 		public List<Inspector> selectedInspectors;
 		public List<Inspector> availableInspectors;
 		public ListView availableListView;
@@ -27,26 +27,46 @@ namespace CCPApp.Views
 			ToolbarItems.Add(inspectorButton);*/
 
 			Padding = new Thickness(0, 5, 0, 0);
+			Title = "Inspection Information";
 			if (existingInspection == null)
 			{
 				inspection = new Inspection();
 				inspection.Checklist = checklist;
 				inspection.ChecklistId = checklist.Id;
-				Title = "Create New Inspection";
 				selectedInspectors = new List<Inspector>();
 			}
 			else
 			{
 				inspection = existingInspection;
-				selectedInspectors = inspection.inspectors;
-				Title = "Edit Inspection";
+				selectedInspectors = new List<Inspector>(inspection.inspectors);
 			}
 			TableView view = new TableView();
-			TableRoot root = new TableRoot("Edit Inspection");
+			TableRoot root = new TableRoot("Inspection Information");
 			TableSection section = new TableSection();
 			StackLayout layout = new StackLayout();
 
-			StackLayout nameLayout = new StackLayout
+			Grid valuesGrid = new Grid
+			{
+				Padding = new Thickness(5,0,0,15),
+				ColumnDefinitions =
+				{
+					new ColumnDefinition { Width = GridLength.Auto},
+					new ColumnDefinition { Width = GridLength.Auto}
+				},
+				RowDefinitions =
+				{
+					new RowDefinition { Height = GridLength.Auto},
+					new RowDefinition { Height = GridLength.Auto},
+					new RowDefinition { Height = GridLength.Auto},
+					new RowDefinition { Height = GridLength.Auto},
+					new RowDefinition { Height = GridLength.Auto},
+					new RowDefinition { Height = GridLength.Auto},
+				}
+			};
+			int rowNumber = 0;
+			valuesGrid.Children.Add(new Label { Text = "Inspection Name:" }, 0, rowNumber);
+
+			/*StackLayout nameLayout = new StackLayout
 			{
 				Orientation = StackOrientation.Horizontal,
 				Children = {
@@ -54,13 +74,15 @@ namespace CCPApp.Views
 						Text = "Inspection Name:"
 					}
 				}
-			};
+			};*/
 			Entry nameEntry = new Entry();
 			nameEntry.WidthRequest = 300;
 			nameEntry.BindingContext = inspection;
 			nameEntry.SetBinding(Entry.TextProperty, "Name");
-			nameLayout.Children.Add(nameEntry);
-			EntryCell NameCell = new EntryCell
+			valuesGrid.Children.Add(nameEntry, 1, rowNumber);
+			rowNumber++;
+			//nameLayout.Children.Add(nameEntry);
+			/*EntryCell NameCell = new EntryCell
 			{
 				BindingContext = inspection,
 				Label = "Inspection Name:",
@@ -72,8 +94,8 @@ namespace CCPApp.Views
 				BindingContext = inspection,
 				Label = "Organization:",
 			};
-			OrganizationCell.SetBinding(EntryCell.TextProperty, "Organization");
-			StackLayout orgLayout = new StackLayout
+			OrganizationCell.SetBinding(EntryCell.TextProperty, "Organization");*/
+			/*StackLayout orgLayout = new StackLayout
 			{
 				Orientation = StackOrientation.Horizontal,
 				Children = {
@@ -81,14 +103,73 @@ namespace CCPApp.Views
 						Text = "Organization:"
 					}
 				}
-			};
+			};*/
 			Entry orgEntry = new Entry();
 			orgEntry.BindingContext = inspection;
 			orgEntry.SetBinding(Entry.TextProperty, "Organization");
 			orgEntry.WidthRequest = 300;
-			orgLayout.Children.Add(orgEntry);
+			//orgLayout.Children.Add(orgEntry);
+			valuesGrid.Children.Add(new Label { Text = "Organization Inspected:" },0,rowNumber);
+			valuesGrid.Children.Add(orgEntry, 1, rowNumber);
+			rowNumber++;
 
-			inspectorPicker = new GenericPicker<Inspector>();
+			Entry PocEntry = new Entry();
+			PocEntry.BindingContext = inspection;
+			PocEntry.SetBinding(Entry.TextProperty, "Poc");
+			PocEntry.WidthRequest = 300;
+			valuesGrid.Children.Add(new Label { Text = "POC:" }, 0, rowNumber);
+			valuesGrid.Children.Add(PocEntry, 1, rowNumber);
+			rowNumber++;
+
+			Entry PocPhoneEntry = new Entry();
+			PocPhoneEntry.BindingContext = inspection;
+			PocPhoneEntry.SetBinding(Entry.TextProperty, "PocPhone");
+			PocPhoneEntry.WidthRequest = 300;
+			valuesGrid.Children.Add(new Label { Text = "POC Phone:" }, 0, rowNumber);
+			valuesGrid.Children.Add(PocPhoneEntry, 1, rowNumber);
+			rowNumber++;
+
+			/*StackLayout dateLayout = new StackLayout
+			{
+				Orientation = StackOrientation.Horizontal,
+				Children = {
+					new Label{
+						Text = "Inspection Date: "
+					}
+				}
+			};*/
+			if (inspection.Date == null)
+			{
+				inspection.Date = DateTime.Now;
+			}
+			DatePicker datePicker = new DatePicker
+			{
+				BindingContext = inspection,
+			};
+			datePicker.SetBinding(DatePicker.DateProperty, "Date");
+			//dateLayout.Children.Add(datePicker);
+			valuesGrid.Children.Add(new Label { Text = "Inspection Date:" }, 0, rowNumber);
+			valuesGrid.Children.Add(datePicker, 1, rowNumber);
+			rowNumber++;
+
+			if (inspection.CompletedDate == null)
+			{
+				inspection.CompletedDate = DateTime.Now;
+			}
+			DatePicker completedPicker = new DatePicker
+			{
+				BindingContext = inspection
+			};
+			completedPicker.SetBinding(DatePicker.DateProperty, "CompletedDate");
+			valuesGrid.Children.Add(new Label { Text = "Date Completed:" }, 0, rowNumber);
+			valuesGrid.Children.Add(completedPicker, 1, rowNumber);
+			rowNumber++;
+
+			/*nameLayout.Padding = new Thickness(5, 0, 0, 0);
+			orgLayout.Padding = new Thickness(5, 0, 0, 0);
+			dateLayout.Padding = new Thickness(5, 0, 0, 0);*/
+
+			//inspectorPicker = new GenericPicker<Inspector>();
 			availableInspectors = App.database.LoadAllInspectors();
 			availableInspectors.Add(Inspector.Null);
 			foreach (Inspector selectedInspector in selectedInspectors)
@@ -96,21 +177,21 @@ namespace CCPApp.Views
 				availableInspectors.RemoveAll(i => i.Id == selectedInspector.Id);
 			}
 			selectedInspectors.Add(Inspector.Null);
-			foreach (Inspector inspector in availableInspectors)
-			{
-				inspectorPicker.AddItem(inspector);
-			}
-			if (inspection.inspectors.Any())
+			//foreach (Inspector inspector in availableInspectors)
+			//{
+			//	inspectorPicker.AddItem(inspector);
+			//}
+			/*if (inspection.inspectors.Any())
 			{
 				try
 				{
 					inspectorPicker.SelectedItem = inspection.inspectors.First();
 				}
 				catch (KeyNotFoundException) { }
-			}
-			ViewCell inspectorCell = new ViewCell { View = inspectorPicker };
+			}*/
+			//ViewCell inspectorCell = new ViewCell { View = inspectorPicker };
 
-			ViewCell inspectorsCell = new ViewCell();
+			//ViewCell inspectorsCell = new ViewCell();
 			StackLayout inspectorsLayout = new StackLayout
 			{
 				Orientation = StackOrientation.Horizontal,
@@ -129,14 +210,14 @@ namespace CCPApp.Views
 			selectedLayout.Children.Add(selectedLabel);
 			inspectorsLayout.Children.Add(availableLayout);
 			inspectorsLayout.Children.Add(selectedLayout);
-			inspectorsCell.View = inspectorsLayout;
+			//inspectorsCell.View = inspectorsLayout;
 
 			availableListView = CreateInspectorsListView(availableInspectors);
 			selectedListView = CreateInspectorsListView(selectedInspectors);
 			availableLayout.Children.Add(availableListView);
 			selectedLayout.Children.Add(selectedListView);
 
-			ViewCell SaveCell = new ViewCell();
+			//ViewCell SaveCell = new ViewCell();
 			//ViewCell CancelCell = new ViewCell();
 			Button saveButton = new Button();
 			//Button cancelButton = new Button();
@@ -144,21 +225,24 @@ namespace CCPApp.Views
 			//cancelButton.Clicked += CancelInspectionClicked;
 			saveButton.Text = "Save";
 			//cancelButton.Text = "Cancel";
-			SaveCell.View = saveButton;
+			//SaveCell.View = saveButton;
 			//CancelCell.View = cancelButton;
 
 			Button createInspectorsButton = new Button();
 			createInspectorsButton.Text = "New Inspector";
 			createInspectorsButton.Clicked += openCreateInspectorPage;
 
-			section.Add(NameCell);
-			layout.Children.Add(nameLayout);
-			section.Add(OrganizationCell);
+			//section.Add(NameCell);
+			//section.Add(OrganizationCell);
+			//section.Add(inspectorCell);
+			//section.Add(inspectorsCell);
+			//section.Add(SaveCell);
+
+			/*layout.Children.Add(nameLayout);
 			layout.Children.Add(orgLayout);
-			section.Add(inspectorCell);
+			layout.Children.Add(dateLayout);*/
+			layout.Children.Add(valuesGrid);
 			layout.Children.Add(inspectorsLayout);
-			section.Add(inspectorsCell);
-			section.Add(SaveCell);
 			layout.Children.Add(createInspectorsButton);
 			layout.Children.Add(saveButton);
 			//section.Add(CancelCell);
@@ -188,6 +272,10 @@ namespace CCPApp.Views
 			App.database.SaveInspection(inspection);
 
 			CallingPage.ResetInspections();
+			if (!App.Navigation.NavigationStack.Contains(CallingPage))
+			{
+				App.Navigation.InsertPageBefore(CallingPage, this);
+			}
 
 			await App.Navigation.PopAsync(true);
 		}
@@ -220,7 +308,7 @@ namespace CCPApp.Views
 			EditInspectorPage page = new EditInspectorPage();
 			page.CallingPage = this;
 
-			await App.Navigation.PushModalAsync(page);
+			await App.Navigation.PushAsync(page);
 		}
 		public void ResetInspectors()
 		{

@@ -27,6 +27,7 @@ namespace CCPApp
 			database.CreateTable<Inspection>();
 			database.CreateTable<Question>();
 			database.CreateTable<ScoredQuestion>();
+			database.CreateTable<Remark>();
 			database.CreateTable<SectionModel>();
 			database.CreateTable<SectionPart>();
 			database.CreateTable<Comment>();
@@ -53,7 +54,33 @@ namespace CCPApp
 			Action action = new Action(() => {
 				lock (dbSync)
 				{
-					database.InsertOrReplaceAllWithChildren(checklists, true);
+					foreach (ChecklistModel checklist in checklists)
+					{
+						database.BeginTransaction();
+						database.InsertOrReplace(checklist);
+						foreach (Inspection inspection in checklist.Inspections)
+						{
+							database.InsertOrReplaceWithChildren(inspection,true);
+						}
+						foreach (SectionModel section in checklist.Sections)
+						{
+							database.InsertOrReplace(section);
+							if (section.SectionParts.Any())
+							{
+								foreach (SectionPart part in section.SectionParts)
+								{
+									database.InsertOrReplace(part);
+									database.InsertOrReplaceAllWithChildren(part.Questions, true);
+								}
+							}
+							else
+							{
+								database.InsertOrReplaceAllWithChildren(section.Questions, true);
+							}
+						}
+						database.Commit();
+					}
+					//database.InsertOrReplaceAllWithChildren(checklists, true);
 				}
 			});
 			await Task.Run(action);
@@ -104,6 +131,11 @@ namespace CCPApp
 						score.InspectionId = inspection.Id;
 						SaveScore(score);
 					}
+					foreach (Remark remark in inspection.remarks)
+					{
+						remark.InspectionId = inspection.Id;
+						SaveRemark(remark);
+					}
 					foreach (Comment comment in inspection.comments)
 					{
 						comment.InspectionId = inspection.Id;
@@ -150,8 +182,6 @@ namespace CCPApp
 		}
 		public async void SaveScore(ScoredQuestion score)
 		{
-			//await waitUntilReady();
-			//ExecutingAsyncTask = true;
 			Action action = new Action(() =>
 			{
 				lock (dbSync)
@@ -161,17 +191,27 @@ namespace CCPApp
 				}
 			});
 			await Task.Run(action);
-			
-			//ExecutingAsyncTask = false;
 		}
-		public ScoredQuestion LoadScoreForQuestion(Inspection inspection, Question question)
+		
+		public async void SaveRemark(Remark remark)
+		{
+			await Task.Run(() =>
+			{
+				lock (dbSync)
+				{
+					remark.InspectionId = remark.inspection.Id;
+					database.InsertOrReplace(remark);
+				}
+			});
+		}
+		/*public ScoredQuestion LoadScoreForQuestion(Inspection inspection, Question question)
 		{
 			return database.Table<ScoredQuestion>().SingleOrDefault(score => score.InspectionId == inspection.Id && score.QuestionId == question.Id);
 		}
 		public List<ScoredQuestion> LoadScoresForInspection(Inspection inspection)
 		{
 			return database.GetAllWithChildren<ScoredQuestion>(score => score.InspectionId == inspection.Id);
-		}
+		}*/
 		public async void DeleteScore(ScoredQuestion score)
 		{
 			//await waitUntilReady();
@@ -183,6 +223,16 @@ namespace CCPApp
 				}
 			});
 			await Task.Run(action);
+		}
+		public async void DeleteRemark(Remark remark)
+		{
+			await Task.Run(() =>
+			{
+				lock (dbSync)
+				{
+					database.Delete(remark);
+				}
+			});
 		}
 		public async void SaveComment(Comment comment)
 		{

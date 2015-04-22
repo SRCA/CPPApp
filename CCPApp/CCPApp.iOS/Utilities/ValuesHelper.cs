@@ -27,7 +27,10 @@ namespace CCPApp.iOS.Utilities
 		}
 		public string outbriefingInstructions()
 		{
-			return "Instructions for how to export and deal with the outbriefing";
+			return "Please enter the name you would like to give this outbriefing file in the text box below.  "+
+				"This file will be available to transfer to a computer via iTunes when you connect your device.  " +
+				"To generate the PowerPoint outbriefing, please refer to the instructions provided separately.  "+
+				"Should you require additional assistance, please contact SRCA at (334) 678-7722.";
 		}
 	}
 }

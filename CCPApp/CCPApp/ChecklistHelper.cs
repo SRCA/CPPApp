@@ -20,10 +20,22 @@ namespace CCPApp
 
 	class ChecklistHelper
 	{
-		public static async void ChecklistButtonClicked(object sender, EventArgs e)
+		public static async void ChecklistMenuButtonClicked(object sender, EventArgs e)
+		{
+			ChecklistButton button = (ChecklistButton)sender;
+			ChecklistMenuPage page = new ChecklistMenuPage(button.checklist);
+			await App.Navigation.PushAsync(page);
+		}
+		public static async void InspectionListButtonClicked(object sender, EventArgs e)
 		{
 			ChecklistButton button = (ChecklistButton)sender;
 			InspectionListPage page = new InspectionListPage(button.checklist);
+			await App.Navigation.PushAsync(page);
+		}
+		public static async void ReferenceListButtonClicked(object sender, EventArgs e)
+		{
+			ChecklistButton button = (ChecklistButton)sender;
+			ReferenceListPage page = new ReferenceListPage(button.checklist);
 			await App.Navigation.PushAsync(page);
 		}
 		/// <summary>

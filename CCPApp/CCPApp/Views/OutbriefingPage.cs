@@ -19,6 +19,8 @@ namespace CCPApp.Views
 			Button saveButton = new Button { Text = "Save" };
 			saveButton.Clicked += SaveOutbriefing;
 
+			Padding = new Thickness(10, 10);
+
 			Content = new StackLayout
 			{
 				Children = {
@@ -31,6 +33,11 @@ namespace CCPApp.Views
 		public async void SaveOutbriefing(object sender, EventArgs e)
 		{
 			string filename = fileNameEntry.Text;
+			if (filename == null || filename.Trim() == string.Empty)
+			{
+				await DisplayAlert("Input Error","Please input a file name","OK");
+				return;
+			}
 			if (!filename.EndsWith(".xml"))
 			{
 				filename = filename + ".xml";

@@ -8,6 +8,7 @@ namespace CCPApp.Models
 {
 	public class ReportOptionsModel
 	{
+		public bool ScoredSectionsOnly { get; set; }
 		public bool Comments { get; set; }
 		public bool Questions { get; set; }
 		public bool Structure { get; set; }
@@ -17,6 +18,7 @@ namespace CCPApp.Models
 
 		public ReportOptionsModel()
 		{
+			ScoredSectionsOnly = false;
 			Comments = true;
 			Questions = true;
 			Structure = true;

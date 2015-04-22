@@ -83,6 +83,7 @@
     <Compile Include="Views\OutbriefingPage.cs" />
     <Compile Include="Views\PdfPage.cs" />
     <Compile Include="Views\PrepareReportPage.cs" />
+    <Compile Include="Views\ReferenceListPage.cs" />
     <Compile Include="Views\ReferencePage.cs" />
     <Compile Include="Views\QuestionPage.cs" />
     <Compile Include="Views\ReportPage.cs" />

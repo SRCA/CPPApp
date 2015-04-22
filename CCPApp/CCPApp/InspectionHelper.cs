@@ -21,12 +21,21 @@ namespace CCPApp
 			CreateInspectionButton button = (CreateInspectionButton)sender;
 			ChecklistModel checklist = button.checklist;
 			EditInspectionPage page = new EditInspectionPage(null,checklist);
-			page.CallingPage = (InspectionListPage)button.ParentView.ParentView;
+			VisualElement Parent = button.ParentView.ParentView;
+			if (Parent.GetType() == typeof(InspectionListPage))
+			{
+				page.CallingPage = (InspectionListPage)button.ParentView.ParentView;
+			}
+			else
+			{
+				InspectionListPage ListPage = new InspectionListPage(checklist);
+				page.CallingPage = ListPage;
+			}
 			await App.Navigation.PushAsync(page);
 		}
 		public static async void SelectInspectionButtonClicked(object sender, EventArgs e)
 		{
-			InspectionButton button = (InspectionButton)sender;
+			IInspectionContainer button = (IInspectionContainer)sender;
 			Inspection inspection = button.inspection;
 			//Device.BeginInvokeOnMainThread(async () =>
 			//{
@@ -41,6 +50,15 @@ namespace CCPApp
 			string MasterQuestionText = string.Empty;
 			List<Reference> MasterQuestionReferences = new List<Reference>();
 			int MasterQuestionNumber = -2;
+			double bottomSpace;
+			if (sectionPage.GetType() == typeof(SectionNoPartsPage))
+			{
+				bottomSpace = 30;
+			}
+			else
+			{
+				bottomSpace = 60;
+			}
 			foreach (Question question in questions)
 			{
 				QuestionPage page = null;
@@ -52,11 +70,11 @@ namespace CCPApp
 				}
 				else if (question.Number == MasterQuestionNumber)
 				{
-					page = new QuestionPage(question, inspection, MasterQuestionText + "\n" + question.Text.Trim(),MasterQuestionReferences);
+					page = new QuestionPage(question, inspection, bottomSpace, MasterQuestionText + "\n" + question.Text.Trim(),MasterQuestionReferences);
 				}
 				else
 				{
-					page = new QuestionPage(question, inspection);
+					page = new QuestionPage(question, inspection, bottomSpace);
 				}
 				if (page != null)
 				{
@@ -78,12 +96,25 @@ namespace CCPApp
 		}
 	}
 
-	public class InspectionButton : Button
+	public interface IInspectionContainer
+	{
+		Inspection inspection { get; set; }
+	}
+
+	public class InspectionGrid : Grid, IInspectionContainer
+	{
+		public InspectionGrid(Inspection inspection)
+		{
+			this.inspection = inspection;
+			//Text = inspection.Name;
+		}
+		public Inspection inspection { get; set; }
+	}
+	public class InspectionButton : Button, IInspectionContainer
 	{
 		public InspectionButton(Inspection inspection)
 		{
 			this.inspection = inspection;
-			Text = inspection.Name;
 		}
 		public Inspection inspection { get; set; }
 	}
@@ -118,6 +149,7 @@ namespace CCPApp
 			GoToQuestionButton button = (GoToQuestionButton)sender;
 			ISectionPage sectionPage = button.inspectionPage.SetSectionPage(button.question.section);
 			sectionPage.SetSelectedQuestion(button.question);
+			button.inspectionPage.CheckActionMenu = false;
 
 			await App.Navigation.PopAsync();
 		}

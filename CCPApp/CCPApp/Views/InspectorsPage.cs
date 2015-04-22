@@ -55,7 +55,7 @@ namespace CCPApp.Views
 			EditInspectorPage page = new EditInspectorPage();
 			page.CallingPage = this;
 
-			await App.Navigation.PushModalAsync(page);
+			await App.Navigation.PushAsync(page);
 		}
 		public void deleteInspector(object sender, EventArgs e)
 		{
@@ -70,7 +70,7 @@ namespace CCPApp.Views
 			Inspector inspector = item.BoundObject;
 			EditInspectorPage page = new EditInspectorPage(inspector);
 			page.CallingPage = this;
-			await App.Navigation.PushModalAsync(page);
+			await App.Navigation.PushAsync(page);
 		}
 	}
 
@@ -79,7 +79,8 @@ namespace CCPApp.Views
 	{
 		public IInspectorHolder CallingPage { get; set; }
 		private Inspector inspector;
-		EntryCell NameCell;
+		Entry NameEntry;
+		//EntryCell NameCell;
 
 		public EditInspectorPage(Inspector existingInspector = null)
 		{
@@ -93,16 +94,39 @@ namespace CCPApp.Views
 				this.inspector = existingInspector;
 				Title = "Edit Inspector";
 			}
-			TableView view = new TableView();
-			TableRoot root = new TableRoot(Title);
-			TableSection section = new TableSection();
+			StackLayout layout = new StackLayout();
+			//TableView view = new TableView();
+			//view.Intent = TableIntent.Menu;
+			//TableRoot root = new TableRoot(Title);
+			//TableSection section = new TableSection();
 			Padding = new Thickness(0, Device.OnPlatform(20, 0, 0), 0, 0);
-			NameCell = new EntryCell
+
+			ViewCell NameCell = new ViewCell();
+			StackLayout nameLayout = new StackLayout
+			{
+				Orientation = StackOrientation.Horizontal,
+				HorizontalOptions = LayoutOptions.Center,
+				Children = {
+					new Label{
+						Text = "Inspector Name: "
+					}
+				}
+			};
+			NameEntry = new Entry
 			{
 				BindingContext = inspector,
-				Label = "Inspector Name:",
 			};
-			NameCell.SetBinding(EntryCell.TextProperty, "Name");
+			NameEntry.WidthRequest = 200;
+			NameEntry.SetBinding(Entry.TextProperty, "Name");
+			nameLayout.Children.Add(NameEntry);
+			NameCell.View = nameLayout;
+
+			//NameCell = new EntryCell
+			//{
+			//	BindingContext = inspector,
+			//	Label = "Inspector Name:",
+			//};
+			//NameCell.SetBinding(EntryCell.TextProperty, "Name");
 			ViewCell SaveCell = new ViewCell();
 			ViewCell CancelCell = new ViewCell();
 			Button saveButton = new Button();
@@ -114,24 +138,27 @@ namespace CCPApp.Views
 			SaveCell.View = saveButton;
 			CancelCell.View = cancelButton;
 
-			section.Add(NameCell);
-			section.Add(SaveCell);
-			section.Add(CancelCell);
-			root.Add(section);
-			view.Root = root;
-			Content = view;
+			//section.Add(NameCell);
+			//section.Add(SaveCell);
+			//section.Add(CancelCell);
+			//root.Add(section);
+			//view.Root = root;
+			layout.Children.Add(nameLayout);
+			layout.Children.Add(saveButton);
+			layout.Children.Add(cancelButton);
+			Content = layout;
 		}
 		public async void SaveInspectorClicked(object sender, EventArgs e)
 		{
-			inspector.Name = NameCell.Text;
+			inspector.Name = NameEntry.Text;
 			App.database.SaveInspector(inspector);
 			CallingPage.ResetInspectors();
 
-			await App.Navigation.PopModalAsync(true);
+			await App.Navigation.PopAsync(true);
 		}
 		public async void CancelInspectorClicked(object sender, EventArgs e)
 		{
-			await App.Navigation.PopModalAsync(true);
+			await App.Navigation.PopAsync(true);
 		}
 	}
 }

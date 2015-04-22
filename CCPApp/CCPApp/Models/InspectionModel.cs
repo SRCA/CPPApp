@@ -23,6 +23,9 @@ namespace CCPApp.Models
 		[OneToMany(CascadeOperations = CascadeOperation.All)]
 		public List<ScoredQuestion> scores { get; set; }
 
+		[OneToMany(CascadeOperations = CascadeOperation.All)]
+		public List<Remark> remarks { get; set; }
+
 		public string Name { get; set; }
 		public string Organization { get; set; }
 
@@ -32,11 +35,18 @@ namespace CCPApp.Models
 		[ManyToMany(typeof(InspectorInspections),CascadeOperations=CascadeOperation.All)]
 		public List<Inspector> inspectors { get; set; }
 
+		public DateTime? Date { get; set; }
+		public DateTime? CompletedDate { get; set; }
+		public string Poc { get; set; }
+		public string PocPhone { get; set; }
+
+
 		[ForeignKey(typeof(Question))]
 		public int? LastViewedQuestionId { get; set; }
 		[ManyToOne(CascadeOperations = CascadeOperation.All)]
 		public Question LastViewedQuestion{ get; set; }
 		public Question GetLastViewedQuestion() { return LastViewedQuestion; }
+
 		public void SetLastViewedQuestion(Question question)
 		{
 			LastViewedQuestion = question;
@@ -54,6 +64,7 @@ namespace CCPApp.Models
 			scores = new List<ScoredQuestion>();
 			comments = new List<Comment>();
 			inspectors = new List<Inspector>();
+			remarks = new List<Remark>();
 		}
 		/// <summary>
 		/// Removes the inspection.  Note: this does not delete the inspection from a checklist in memory.
@@ -82,6 +93,10 @@ namespace CCPApp.Models
 		public ScoredQuestion GetScoreForQuestion(Question question)
 		{
 			return scores.SingleOrDefault(s => s.QuestionId == question.Id);
+		}
+		public Remark GetRemarkForQuestion(Question question)
+		{
+			return remarks.SingleOrDefault(r => r.QuestionId == question.Id);
 		}
 	}	
 }

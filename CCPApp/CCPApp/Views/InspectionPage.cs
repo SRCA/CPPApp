@@ -14,7 +14,8 @@ namespace CCPApp.Views
 	/// </summary>
 	public class InspectionPage : TabbedPage
 	{
-		private Inspection inspection;		
+		private Inspection inspection;
+		public bool CheckActionMenu = true;
 		public InspectionPage(Inspection inspection)
 		{
 			this.inspection = inspection;
@@ -50,12 +51,12 @@ namespace CCPApp.Views
 			{
 				if (section.SectionParts.Count > 0)
 				{
-					SectionWithPartsPage page = new SectionWithPartsPage(section, inspection);
+					SectionWithPartsPage page = new SectionWithPartsPage(section, inspection,this);
 					Children.Add(page);
 				}
 				else
 				{
-					SectionNoPartsPage page = new SectionNoPartsPage(section, inspection);
+					SectionNoPartsPage page = new SectionNoPartsPage(section, inspection,this);
 					Children.Add(page);
 				}
 			}
@@ -150,6 +151,18 @@ namespace CCPApp.Views
 				break;
 			}
 		}
+		protected override void OnAppearing()
+		{
+			Type type = App.Navigation.NavigationStack.Last().GetType();
+			if (CheckActionMenu && (type == typeof(PrepareReportPage) || type == typeof(DisputedPage) || type == typeof(UnansweredPage) || type == typeof(ScoresPage)
+				|| type == typeof(OutbriefingPage)))
+			{
+				//They are returning from a page that comes from the actions menu.  They may expect the actions menu to still be there.
+				ClickActionsButton(null, null);
+			}
+			CheckActionMenu = true;
+			base.OnAppearing();
+		}
 
 		public ISectionPage SetSectionPage(SectionModel section)
 		{
@@ -175,11 +188,13 @@ namespace CCPApp.Views
 		SectionModel section;
 		bool initialized = false;
 		Inspection inspection;
-		public SectionWithPartsPage(SectionModel section, Inspection inspection)
+		public InspectionPage parentPage;
+		public SectionWithPartsPage(SectionModel section, Inspection inspection, InspectionPage parentPage)
 		{
 			this.section = section;
 			this.inspection = inspection;
 			Title = section.ShortTitle;
+			this.parentPage = parentPage;
 			int scoredQuestions = inspection.scores.Count(s => s.question.section == section);
 			if (section.AllScorableQuestions().Count == scoredQuestions)
 			{
@@ -249,15 +264,17 @@ namespace CCPApp.Views
 			base.OnCurrentPageChanged();
 		}
 	}
-	internal class SectionNoPartsPage : CarouselPage, ISectionPage
+	public class SectionNoPartsPage : CarouselPage, ISectionPage
 	{
 		SectionModel section;
 		bool initialized = false;
 		Inspection inspection;
-		public SectionNoPartsPage(SectionModel section, Inspection inspection)
+		InspectionPage parentPage;
+		public SectionNoPartsPage(SectionModel section, Inspection inspection, InspectionPage parentPage)
 		{
 			this.section = section;
 			this.inspection = inspection;
+			this.parentPage = parentPage;
 			Title = section.ShortTitle;
 			int scoredQuestions = inspection.scores.Count(s => s.question.section == section);
 			if (section.AllScorableQuestions().Count == scoredQuestions)
@@ -317,13 +334,24 @@ namespace CCPApp.Views
 				Icon = InspectionHelper.HalfCircleFileName;
 			}
 		}
-		public void AutoAdvance(Question question)
+		public async void AutoAdvance(Question question)
 		{
 			List<Question> questions = section.AllScorableQuestions();
 			if (question.Id == questions.Last().Id)
 			{
-				//I could just do nothing, or I could go to the next section.  Or, like, go to the scores page.
-				return;
+				if (!(section.Id == inspection.Checklist.Sections.Last().Id))
+				{
+					bool accept = await DisplayAlert("End of Section", "You have reached the end of this section.  Would you like to continue to the next?", "Yes", "No");
+					if (accept)
+					{
+						parentPage.CurrentPage = parentPage.Children.ElementAt(parentPage.Children.IndexOf(parentPage.CurrentPage) + 1);
+					}
+				}
+				else
+				{
+					//report that this is the end of the checklist
+					await DisplayAlert("End of Checklist", "You have reached the end of the checklist.", "OK");
+				}
 			}
 			else
 			{
@@ -358,10 +386,12 @@ namespace CCPApp.Views
 	{
 		SectionPart part;
 		Inspection inspection;
+		SectionWithPartsPage parentPage;
 		public PartPage(SectionPart part, Inspection inspection, SectionWithPartsPage sectionPage)
 		{
 			this.part = part;
 			this.inspection = inspection;
+			parentPage = sectionPage;
 			Title = "Part " + part.Label;
 			List<QuestionPage> pages = InspectionHelper.GenerateQuestionPages(part.Questions, inspection, sectionPage);
 			foreach (ContentPage page in pages)
@@ -382,12 +412,12 @@ namespace CCPApp.Views
 		}
 		public void UpdateIcon()
 		{
-			int scoredQuestions = Children.Cast<QuestionPage>().Count(p => p.HasScore);
+			int scoredQuestions = inspection.scores.Count(s => s.question.part == part);
 			if (scoredQuestions == 0)
 			{
 				Icon = InspectionHelper.EmptyCircleFileName;
 			}
-			else if (scoredQuestions == Children.Count)
+			else if (scoredQuestions == part.ScorableQuestions.Count())
 			{
 				Icon = InspectionHelper.CheckmarkFileName;
 			}
@@ -396,13 +426,36 @@ namespace CCPApp.Views
 				Icon = InspectionHelper.HalfCircleFileName;
 			}
 		}
-		public void AutoAdvance(Question question)
+		public async void AutoAdvance(Question question)
 		{
 			List<Question> questions = part.ScorableQuestions.ToList();
 			if (question.Id == questions.Last().Id)
 			{
-				//I could just do nothing, or I could go to the next part.  Or, like, go to the scores page.
-				return;
+				SectionModel section = part.section;
+				if (section.SectionParts.Last().Id == part.Id)
+				{//this is the last part.  Offer to go to next section.
+					if (!(section.Id == inspection.Checklist.Sections.Last().Id))
+					{
+						bool accept = await DisplayAlert("End of Section", "You have reached the end of this section.  Would you like to continue to the next?", "Yes", "No");
+						if (accept)
+						{
+							parentPage.parentPage.CurrentPage = parentPage.parentPage.Children.ElementAt(parentPage.parentPage.Children.IndexOf(parentPage.parentPage.CurrentPage) + 1);
+						}
+					}
+					else
+					{
+						//report that this is the end of the checklist
+						await DisplayAlert("End of Checklist", "You have reached the end of the checklist.", "OK");
+					}
+				}
+				else
+				{//offer to go to the next part
+					bool accept = await DisplayAlert("End of Part", "You have reached the end of this part.  Would you like to continue to the next?", "Yes", "No");
+					if (accept)
+					{
+						parentPage.CurrentPage = parentPage.Children.ElementAt(parentPage.Children.IndexOf(parentPage.CurrentPage) + 1);
+					}
+				}
 			}
 			else
 			{

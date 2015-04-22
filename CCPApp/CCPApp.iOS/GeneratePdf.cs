@@ -500,7 +500,8 @@ namespace CCPApp.iOS
 				}
 				else
 				{
-					PdfPCell remarksCell = new PdfPCell(new Phrase(question.Remarks, fonts["TNR10"]));
+					Remark remark = inspection.GetRemarkForQuestion(question);
+					PdfPCell remarksCell = new PdfPCell(new Phrase((remark == null) ? string.Empty : remark.remark, fonts["TNR10"]));
 					scoreCell.Rowspan = 2;
 					remarksCell.Rowspan = 2;
 					table.AddCell(scoreCell);

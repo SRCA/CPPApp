@@ -33,7 +33,7 @@ namespace CCPApp.Models
 		public string Text { get; set; }
 		public string PrintedText { get; set; }
 		public string OldText { get; set; }
-		public string Remarks { get; set; }
+		//public string Remarks { get; set; }
 		public string OldRemarks;
 
 		[OneToMany(CascadeOperations = CascadeOperation.All)]

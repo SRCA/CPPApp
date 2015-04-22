@@ -14,6 +14,7 @@ namespace CCPApp.Views
 		public Question question;
 		Inspection inspection;
 		ScoredQuestion score;
+		Remark remark;
 		Editor remarksBox;
 		public ISectionPage sectionPage { get; set; }
 		public bool HasScore = false;
@@ -30,12 +31,17 @@ namespace CCPApp.Views
 			}
 		}
 
-		public QuestionPage(Question question, Inspection inspection, string textOverride = null, List<Reference> extraReferences = null)
+		public QuestionPage(Question question, Inspection inspection, double BottomSpace, string textOverride = null, List<Reference> extraReferences = null)
 		{
 			this.question = question;
 			this.inspection = inspection;
 			this.textOverride = textOverride;
 			this.extraReferences = extraReferences;
+			Padding = new Thickness(0, 0, 0, BottomSpace);
+			Content = new ActivityIndicator
+			{
+				IsRunning = true,
+			};
 		}
 
 		private void Setup()
@@ -192,7 +198,7 @@ namespace CCPApp.Views
 
 			//Remarks box
 			remarksBox = new Editor();
-			remarksBox.Text = question.Remarks;
+			remark = inspection.GetRemarkForQuestion(question);
 			if (App.IsPortrait(this))
 			{
 				remarksBox.HeightRequest = 300;
@@ -201,7 +207,16 @@ namespace CCPApp.Views
 			{
 				remarksBox.HeightRequest = 100;
 			}
-			question.OldRemarks = question.Remarks;
+			if (remark == null)
+			{
+				remarksBox.Text = string.Empty;
+				question.OldRemarks = string.Empty;
+			}
+			else
+			{
+				remarksBox.Text = remark.remark;
+				question.OldRemarks = remark.remark;
+			}
 			remarksBox.TextChanged += SaveRemarksText;
 			layout.Children.Add(remarksBox);
 
@@ -235,13 +250,30 @@ namespace CCPApp.Views
 
 		protected async void SaveRemarksText(object Sender, EventArgs e)
 		{
-			await Task.Run(() => question.Remarks = remarksBox.Text);
+			await Task.Run(() => {
+				if (remark == null && remarksBox.Text.Length > 0)
+				{//Create a remark and save it.
+					remark = new Remark();
+					remark.question = question;
+					remark.QuestionId = (int)question.Id;
+					remark.inspection = inspection;
+					remark.InspectionId = inspection.Id;
+					remark.remark = remarksBox.Text;
+					inspection.remarks.Add(remark);
+				}
+				else
+				{//Update the existing remark
+					remark.remark = remarksBox.Text;
+				}
+				//question.Remarks = remarksBox.Text;
+			});
 		}
 		protected override void OnDisappearing()
 		{
-			if (question.Remarks != question.OldRemarks)
+			if (remark != null && remark.remark != question.OldRemarks)
 			{
-				App.database.SaveQuestion(question);
+				remark.UpdateRemark();
+				question.OldRemarks = remark.remark;
 			}
 			base.OnDisappearing();
 		}
@@ -298,7 +330,7 @@ namespace CCPApp.Views
 				await App.Navigation.PushAsync(page);
 			});
 		}
-		private void openReferencePage(object sender, EventArgs e)
+		/*private void openReferencePage(object sender, EventArgs e)
 		{
 			Device.BeginInvokeOnMainThread(async () =>
 			{
@@ -312,7 +344,7 @@ namespace CCPApp.Views
 				ReferencePage page = new ReferencePage(referenceName, pageNumber);
 				await App.Navigation.PushAsync(page);
 			});
-		}
+		}*/
 
 	}
 

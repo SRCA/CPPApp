@@ -50,6 +50,10 @@ namespace CCPApp.Views
 				pdfMaker.NewPageIfNotEmpty();
 				foreach (ReportSection section in reportSections)
 				{
+					if (model.ScoredSectionsOnly && section.section.availablePoints == 0)
+					{
+						continue;
+					}
 					pdfMaker.CreateQuestionSection(section);
 					if (section != reportSections.Last())
 					{
@@ -245,9 +249,10 @@ namespace CCPApp.Views
 		public async void SaveReport(object Sender, EventArgs e)
 		{
 			string destinationFile = fileNameBox.Text;
-			if (destinationFile == null)
+			if (destinationFile == null || destinationFile.Trim() == string.Empty)
 			{
-				destinationFile = string.Empty;
+				await DisplayAlert("Input Error", "Please input a file name", "OK");
+				return;
 			}
 			if (!destinationFile.EndsWith(".pdf"))
 			{

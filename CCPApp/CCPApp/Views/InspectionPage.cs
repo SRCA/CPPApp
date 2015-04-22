@@ -320,7 +320,20 @@ namespace CCPApp.Views
 		}
 		public void UpdateIcon()
 		{
-			int scoredQuestions = Children.Cast<QuestionPage>().Count(p => p.HasScore);
+			int scoredQuestions = inspection.scores.Count(s => s.question.section == section);
+			if (scoredQuestions == 0)
+			{
+				Icon = InspectionHelper.EmptyCircleFileName;
+			}
+			else if (scoredQuestions == section.AllScorableQuestions().Count)
+			{
+				Icon = InspectionHelper.CheckmarkFileName;
+			}
+			else
+			{
+				Icon = InspectionHelper.HalfCircleFileName;
+			}
+			/*int scoredQuestions = Children.Cast<QuestionPage>().Count(p => p.HasScore);
 			if (scoredQuestions == 0)
 			{
 				Icon = InspectionHelper.EmptyCircleFileName;
@@ -332,7 +345,7 @@ namespace CCPApp.Views
 			else
 			{
 				Icon = InspectionHelper.HalfCircleFileName;
-			}
+			}*/
 		}
 		public async void AutoAdvance(Question question)
 		{

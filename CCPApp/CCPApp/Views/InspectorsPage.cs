@@ -87,7 +87,7 @@ namespace CCPApp.Views
 			if (existingInspector == null)
 			{
 				this.inspector = new Inspector();
-				Title = "Create new Inspector";
+				Title = "Create New Inspector";
 			}
 			else
 			{
@@ -95,6 +95,8 @@ namespace CCPApp.Views
 				Title = "Edit Inspector";
 			}
 			StackLayout layout = new StackLayout();
+			layout.Padding = new Thickness(20, 0, 0, 0);
+			layout.HorizontalOptions = LayoutOptions.StartAndExpand;
 			//TableView view = new TableView();
 			//view.Intent = TableIntent.Menu;
 			//TableRoot root = new TableRoot(Title);
@@ -131,6 +133,8 @@ namespace CCPApp.Views
 			ViewCell CancelCell = new ViewCell();
 			Button saveButton = new Button();
 			Button cancelButton = new Button();
+			saveButton.HorizontalOptions = LayoutOptions.StartAndExpand;
+			cancelButton.HorizontalOptions = LayoutOptions.StartAndExpand;
 			saveButton.Clicked += SaveInspectorClicked;
 			cancelButton.Clicked += CancelInspectorClicked;
 			saveButton.Text = "Save";

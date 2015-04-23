@@ -39,7 +39,8 @@ namespace CCPApp.Views
 				button.HorizontalOptions = LayoutOptions.StartAndExpand;
 				button.Clicked += async (object Sender, EventArgs e) =>
 				{
-					string folderName = checklist.Id;
+					//string folderName = checklist.Id;
+					string folderName = "Checklist";
 					string relativePath = folderName + "/" + fileName;
 					ReferencePage page = new ReferencePage(relativePath, 1);
 					await App.Navigation.PushAsync(page);

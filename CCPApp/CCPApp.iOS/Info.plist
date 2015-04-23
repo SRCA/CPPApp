@@ -28,9 +28,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.SRCA.CCPApp</string>
 	<key>CFBundleVersion</key>
-	<string>0.9.0.0</string>
+	<string>0.9.1.1</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.9.0.0</string>
+	<string>0.9.1.1</string>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleBlackOpaque</string>
 	<key>CFBundleIconFiles</key>

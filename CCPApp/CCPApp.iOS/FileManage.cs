@@ -16,9 +16,14 @@ namespace CCPApp.iOS
 	{
 		public IEnumerable<string> GetAllValidFiles()
 		{
-			var documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-			IEnumerable<string> filesInDirectory = Directory.EnumerateFiles(documentsPath);
-			return filesInDirectory.Where(f => f.EndsWith(".zip"));
+			List<string> fileNames = new List<string>();
+			string name = Path.GetFullPath("./AASKI Operational Assessment Inspection Mobile.zip");
+			fileNames.Add(name);	//Obviously this is super hardcoded.  That's bad.  TODO?
+			return fileNames;
+			//var directories = System.IO.Directory.EnumerateFiles("./").ToList();
+			/*var documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+			List<string> filesInDirectory = Directory.EnumerateFiles(documentsPath).ToList();
+			return filesInDirectory.Where(f => f.EndsWith(".zip"));*/
 		}
 		public XmlReader LoadXml(string filename)
 		{

@@ -79,7 +79,7 @@
     <ConsolePause>False</ConsolePause>
     <CodesignKey>iPhone Distribution</CodesignKey>
     <BuildIpa>True</BuildIpa>
-    <CodesignProvision>00f0b670-4e94-44cd-ab12-a323b302e244</CodesignProvision>
+    <CodesignProvision>58d01cc8-7299-4ba1-bfe2-3f11a5e613e5</CodesignProvision>
     <CodesignEntitlements />
     <CodesignResourceRules />
     <CodesignExtraArgs />
@@ -119,6 +119,9 @@
     <Compile Include="Renderers\ScoresPageRenderer.cs" />
     <Compile Include="SQLite_iOS.cs" />
     <Compile Include="Utilities\ValuesHelper.cs" />
+    <Content Include="AASKI Operational Assessment Inspection Mobile.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="App.config" />
     <None Include="Info.plist">
       <SubType>Designer</SubType>

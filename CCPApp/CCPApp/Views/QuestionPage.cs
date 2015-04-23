@@ -171,7 +171,8 @@ namespace CCPApp.Views
 
 			foreach (Reference reference in references)
 			{
-				var referenceButton = new ReferenceButton(reference) { folderName = inspection.ChecklistId, FontAttributes = FontAttributes.Italic, HorizontalOptions = LayoutOptions.StartAndExpand };
+				//var referenceButton = new ReferenceButton(reference) { folderName = inspection.ChecklistId, FontAttributes = FontAttributes.Italic, HorizontalOptions = LayoutOptions.StartAndExpand };
+				var referenceButton = new ReferenceButton(reference) { folderName = "Checklist", FontAttributes = FontAttributes.Italic, HorizontalOptions = LayoutOptions.StartAndExpand };
 				layout.Children.Add(
 					new StackLayout
 					{
@@ -330,22 +331,6 @@ namespace CCPApp.Views
 				await App.Navigation.PushAsync(page);
 			});
 		}
-		/*private void openReferencePage(object sender, EventArgs e)
-		{
-			Device.BeginInvokeOnMainThread(async () =>
-			{
-				string referenceName = inspection.ChecklistId + "/" + question.References.First().DocumentName;
-				string bookmark = question.References.First().Bookmark;
-				int pageNumber = 1;
-				if (bookmark != string.Empty)
-				{
-					pageNumber = int.Parse(bookmark);
-				}
-				ReferencePage page = new ReferencePage(referenceName, pageNumber);
-				await App.Navigation.PushAsync(page);
-			});
-		}*/
-
 	}
 
 	internal class AnswerChoice

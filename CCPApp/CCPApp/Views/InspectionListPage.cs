@@ -124,7 +124,8 @@ namespace CCPApp.Views
 			createInspectionButton.Text = "Begin a New Inspection";
 			createInspectionButton.Clicked += InspectionHelper.CreateInspectionButtonClicked;
 			ViewCell createInspectionButtonView = new ViewCell();
-			createInspectionButtonView.View = createInspectionButton;
+			createInspectionButtonView.View = new StackLayout { Children = { createInspectionButton } };
+			//The StackLayout protects us from a Xamarin bug.
 
 			section.Add(cells);
 			section.Add(createInspectionButtonView);

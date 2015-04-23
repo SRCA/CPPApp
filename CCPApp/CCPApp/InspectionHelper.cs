@@ -53,11 +53,11 @@ namespace CCPApp
 			double bottomSpace;
 			if (sectionPage.GetType() == typeof(SectionNoPartsPage))
 			{
-				bottomSpace = 20;
+				bottomSpace = 0;
 			}
 			else
 			{
-				bottomSpace = 40;
+				bottomSpace = 0;
 			}
 			foreach (Question question in questions)
 			{

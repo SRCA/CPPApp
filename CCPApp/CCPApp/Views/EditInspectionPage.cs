@@ -40,9 +40,9 @@ namespace CCPApp.Views
 				inspection = existingInspection;
 				selectedInspectors = new List<Inspector>(inspection.inspectors);
 			}
-			TableView view = new TableView();
-			TableRoot root = new TableRoot("Inspection Information");
-			TableSection section = new TableSection();
+			//TableView view = new TableView();
+			//TableRoot root = new TableRoot("Inspection Information");
+			//TableSection section = new TableSection();
 			StackLayout layout = new StackLayout();
 
 			Grid valuesGrid = new Grid
@@ -64,7 +64,7 @@ namespace CCPApp.Views
 				}
 			};
 			int rowNumber = 0;
-			valuesGrid.Children.Add(new Label { Text = "Inspection Name:" }, 0, rowNumber);
+			valuesGrid.Children.Add(new Label { Text = "Inspection Name*:" }, 0, rowNumber);
 
 			/*StackLayout nameLayout = new StackLayout
 			{
@@ -109,7 +109,7 @@ namespace CCPApp.Views
 			orgEntry.SetBinding(Entry.TextProperty, "Organization");
 			orgEntry.WidthRequest = 300;
 			//orgLayout.Children.Add(orgEntry);
-			valuesGrid.Children.Add(new Label { Text = "Organization Inspected:" },0,rowNumber);
+			valuesGrid.Children.Add(new Label { Text = "Organization Inspected*:" },0,rowNumber);
 			valuesGrid.Children.Add(orgEntry, 1, rowNumber);
 			rowNumber++;
 
@@ -200,10 +200,10 @@ namespace CCPApp.Views
 			StackLayout availableLayout = new StackLayout();
 			Rectangle bounds = App.GetPageBounds();
 			availableLayout.WidthRequest = (bounds.Width / 2) -  5;
-			availableLayout.HeightRequest = 400;
+			availableLayout.HeightRequest = 360;
 			StackLayout selectedLayout = new StackLayout();
 			selectedLayout.WidthRequest = (bounds.Width / 2) - 5;
-			selectedLayout.HeightRequest = 400;
+			selectedLayout.HeightRequest = 360;
 			Label availableLabel = new Label { Text = "Available Inspectors" };
 			Label selectedLabel  = new Label { Text = "Selected Inspectors" };
 			availableLayout.Children.Add(availableLabel);
@@ -246,16 +246,27 @@ namespace CCPApp.Views
 			layout.Children.Add(createInspectorsButton);
 			layout.Children.Add(saveButton);
 			//section.Add(CancelCell);
-			root.Add(section);
-			view.Root = root;
+			//root.Add(section);
+			//view.Root = root;
 			//view.Intent = TableIntent.Form;
 			//view.HasUnevenRows = true;
-			Content = layout;
+			Content = new ScrollView { Content = layout };
 			//Content = view;
 		}
 
 		public async void SaveInspectionClicked(object sender, EventArgs e)
 		{
+			if (inspection.Name == null || inspection.Name.Trim() == string.Empty)
+			{
+				await DisplayAlert("Input Error","Please enter a name for the inspection","OK");
+				return;
+			}
+			if (inspection.Organization == null || inspection.Organization.Trim() == string.Empty)
+			{
+				await DisplayAlert("Input Error", "Please enter the organization being inspected", "OK");
+				return;
+			}
+
 			ChecklistModel checklist = inspection.Checklist;
 			//inspection.Name = NameCell.Text;
 			inspection.ChecklistId = checklist.Id;

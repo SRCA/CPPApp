@@ -154,6 +154,12 @@ namespace CCPApp.Views
 		}
 		public async void SaveInspectorClicked(object sender, EventArgs e)
 		{
+			string name = NameEntry.Text;
+			if (name == null || name.Trim() == string.Empty)
+			{
+				await DisplayAlert("Input Error", "Please enter a name for the inspector", "OK");
+				return;
+			}
 			inspector.Name = NameEntry.Text;
 			App.database.SaveInspector(inspector);
 			CallingPage.ResetInspectors();

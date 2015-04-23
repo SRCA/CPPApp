@@ -16,6 +16,7 @@ namespace CCPApp.Views
 		public UnansweredPage(Inspection inspection, InspectionPage page)
 		{
 			this.inspection = inspection;
+			Title = "Unanswered Questions";
 			inspectionPage = page;
 			List<Question> questions = new List<Question>();
 			foreach (SectionModel section in inspection.Checklist.Sections)

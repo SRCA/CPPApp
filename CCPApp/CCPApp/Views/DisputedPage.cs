@@ -15,6 +15,7 @@ namespace CCPApp.Views
 		public DisputedPage(Inspection inspection, InspectionPage page)
 		{			
 			this.inspection = inspection;
+			Title = "Disputed Questions";
 			inspectionPage = page;
 			IEnumerable<Question> questions = inspection.scores.Where(s => s.answer == Answer.Disputed).Select(s => s.question);
 

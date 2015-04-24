@@ -57,7 +57,7 @@ namespace CCPApp
 			}
 			else
 			{
-				bottomSpace = 0;
+				bottomSpace = 1;
 			}
 			foreach (Question question in questions)
 			{

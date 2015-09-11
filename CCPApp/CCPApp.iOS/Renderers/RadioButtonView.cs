@@ -1,10 +1,11 @@
-﻿using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using CoreGraphics;
+using Foundation;
+using System;
+using UIKit;
 
 namespace CCPApp.iOS.Renderers
 {
-    [Register("RadioButtonView")]
+    [Foundation.Register("RadioButtonView")]
     public class RadioButtonView : UIButton
     {
         public RadioButtonView()
@@ -12,7 +13,7 @@ namespace CCPApp.iOS.Renderers
             Initialize();
         }
 
-        public RadioButtonView(RectangleF bounds)
+        public RadioButtonView(CGRect bounds)
             : base(bounds)
         {
             Initialize();
@@ -41,7 +42,7 @@ namespace CCPApp.iOS.Renderers
 
         void AdjustEdgeInsets()
         {
-            const float inset = 18f;
+            nfloat inset = (nfloat)18;
 
             this.HorizontalAlignment = UIControlContentHorizontalAlignment.Left;
             this.ImageEdgeInsets = new UIEdgeInsets(0f, inset, 0f, 0f);

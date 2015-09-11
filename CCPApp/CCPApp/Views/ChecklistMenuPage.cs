@@ -19,6 +19,7 @@ namespace CCPApp.Views
 			TableView view = new TableView();
 			TableRoot root = new TableRoot();
 			TableSection section = new TableSection();
+			StackLayout layout = new StackLayout();
 			view.Intent = TableIntent.Menu;
 
 			//New Inspection
@@ -53,21 +54,19 @@ namespace CCPApp.Views
 			viewReferencesLayout.Children.Add(viewReferencesButton);
 			viewReferencesCell.View = viewReferencesLayout;
 
-			//Full Reference List
-			/*ViewCell referenceListCell = new ViewCell();
-			Label referenceListLabel = new Label();
-			referenceListLabel.Text = "View Full Reference List";
-			referenceListCell.View = referenceListLabel;*/
-
 			section.Add(newInspectionCell);
 			section.Add(existingInspectionCell);
 			section.Add(viewReferencesCell);
+			//layout.Children.Add(newInspectionLayout);
+			//layout.Children.Add(existingInspectionLayout);
+			//layout.Children.Add(viewReferencesLayout);
 			//section.Add(referenceListCell);
 
 			root.Add(section);
 			view.Root = root;
 
 			Content = view;
+			//Content = layout;
 		}
 	}
 }

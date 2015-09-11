@@ -1,7 +1,6 @@
 ﻿using CCPApp.Models;
 using SQLite.Net;
 using SQLite.Net.Async;
-using SQLiteNetExtensionsAsync.Extensions;
 using SQLiteNetExtensions.Extensions;
 using System;
 using System.Collections.Generic;

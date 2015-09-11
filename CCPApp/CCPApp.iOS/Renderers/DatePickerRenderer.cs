@@ -1,15 +1,15 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using Xamarin.Forms.Platform.iOS;
 using Xamarin.Forms;
 using CCPApp.iOS.Renderers;
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreAnimation;
+using CoreGraphics;
+using CoreAnimation;
 
 [assembly: ExportRenderer(typeof(DatePicker), typeof(OutlineDatePickerRenderer))]
 namespace CCPApp.iOS.Renderers
@@ -22,9 +22,9 @@ namespace CCPApp.iOS.Renderers
 			if (e.OldElement == null && Control != null)
 			{
 				CALayer layer = Control.Layer;
-				layer.BorderWidth = 1F;
+				layer.BorderWidth = (nfloat)1;
 				layer.BorderColor = UIColor.Black.CGColor;
-				layer.CornerRadius = 8;
+				layer.CornerRadius = (nfloat)8;
 			}
 		}
 	}

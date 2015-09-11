@@ -1,7 +1,7 @@
-﻿using CCPApp.Items;
-using CCPApp.Models;
-using CCPApp.Utilities;
+﻿using CCPApp.Models;
 using CCPApp.Views;
+using CCPApp.Utilities;
+using CCPApp.Items;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +19,6 @@ namespace CCPApp
 		public App()
 		{
 			List<ChecklistModel> checklists = new List<ChecklistModel>();
-
 			checklists.AddRange(database.LoadAllChecklists());
 
 			//Begin embedded checklist code
@@ -51,7 +50,7 @@ namespace CCPApp
 					}
 				}
 			};
-			
+
 			var datePickerStyle = new Style(typeof(DatePicker))
 			{
 				Triggers = {

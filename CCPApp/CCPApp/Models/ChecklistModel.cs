@@ -7,7 +7,6 @@ using System.Xml;
 using Xamarin.Forms;
 using SQLite.Net.Attributes;
 using SQLiteNetExtensions.Attributes;
-using System.Drawing;
 
 namespace CCPApp.Models
 {

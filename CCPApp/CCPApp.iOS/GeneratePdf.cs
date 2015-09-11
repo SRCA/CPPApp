@@ -1,4 +1,4 @@
-﻿using CCPApp.iOS;
+using CCPApp.iOS;
 using CCPApp.Models;
 using CCPApp.Utilities;
 using iTextSharp.text;
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
-using System.Drawing;
+using CoreGraphics;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(GeneratePdf))]
@@ -651,7 +651,7 @@ namespace CCPApp.iOS
 			else
 			{
 				scoreCell = new PdfPCell(new Phrase(PercentString(inspection.percentage)));
-			}			
+			}
 			scoreCell.DisableBorderSide(Rectangle.LEFT_BORDER);
 			scoreCell.DisableBorderSide(Rectangle.RIGHT_BORDER);
 			scoreCell.DisableBorderSide(Rectangle.BOTTOM_BORDER);
@@ -753,7 +753,7 @@ namespace CCPApp.iOS
 			else
 			{
 				scoreCell = new PdfPCell(new Phrase(PercentString(section.percentage), fonts["TNR11"]));
-			}	
+			}
 			scoreCell.DisableBorderSide(Rectangle.RIGHT_BORDER);
 			scoreCell.DisableBorderSide(Rectangle.LEFT_BORDER);
 			scoreCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;

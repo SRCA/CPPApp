@@ -1,6 +1,7 @@
-﻿using System;
-using MonoTouch.UIKit;
-using MonoTouch.Foundation;
+using CoreGraphics;
+using System;
+using UIKit;
+using Foundation;
 
 namespace CCPApp.iOS.Utilities
 {
@@ -10,14 +11,26 @@ namespace CCPApp.iOS.Utilities
         {
             var nativeString = new NSString(text);
 
-            var rect = nativeString.GetBoundingRect(
-                new System.Drawing.SizeF(width, float.MaxValue),
+            var rect = (CGRect)nativeString.GetBoundingRect(
+                new CoreGraphics.CGSize(width, float.MaxValue),
                 NSStringDrawingOptions.UsesLineFragmentOrigin,
                 new UIStringAttributes() { Font = font },
                 null);
 
-            return rect.Height;
+            return (float)rect.Height;
         }
+		public static nfloat StringHeight(this string text, UIFont font, nfloat width)
+		{
+			var nativeString = new NSString(text);
+
+			var rect = (CGRect)nativeString.GetBoundingRect(
+				new CoreGraphics.CGSize(width, nfloat.MaxValue),
+				NSStringDrawingOptions.UsesLineFragmentOrigin,
+				new UIStringAttributes() { Font = font },
+				null);
+
+			return rect.Height;
+		}
     }
 }
 

@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using Xamarin.Forms.Platform.iOS;
 using CCPApp.Views;
 using Xamarin.Forms;
 using CCPApp.iOS.Renderers;
-using System.Drawing;
 using System.Threading.Tasks;
-using MonoTouch.CoreGraphics;
+using CoreGraphics;
 using System.IO;
 
 [assembly:ExportRenderer(typeof(PdfPage), typeof(PdfPageRenderer))]
@@ -19,8 +18,8 @@ namespace CCPApp.iOS.Renderers
 {
 	public class PdfPageRenderer : PageRenderer
 	{
-		int NumberOfPages = 0;
-		float PageLength = 0;
+		nint NumberOfPages = 0;
+		nfloat PageLength = 0;
 		protected override void OnElementChanged(VisualElementChangedEventArgs e)
 		{
 			base.OnElementChanged(e);
@@ -46,7 +45,7 @@ namespace CCPApp.iOS.Renderers
 			if (path.EndsWith(".pdf"))
 			{
 				CGPDFDocument doc = CGPDFDocument.FromFile(path);
-				NumberOfPages = doc.Pages;
+				NumberOfPages = (nint)doc.Pages;
 			}
 
 			//NSUrlRequest request = new NSUrlRequest(new NSUrl(path,false));
@@ -64,9 +63,9 @@ namespace CCPApp.iOS.Renderers
 			{
 				UIWebView webView = (UIWebView)View;
 				UIScrollView scroll = webView.ScrollView;
-				PageLength = scroll.ContentSize.Height / NumberOfPages;
-				float pixelDistance = (page.PageNumber - 1) * PageLength - 3;
-				scroll.ScrollRectToVisible(new RectangleF(0, pixelDistance, scroll.Bounds.Width, scroll.Bounds.Height), false);
+				PageLength = (nfloat)scroll.ContentSize.Height / NumberOfPages;
+				nfloat pixelDistance = (page.PageNumber - 1) * PageLength - 3;
+				scroll.ScrollRectToVisible((CGRect)new CGRect(0, pixelDistance, scroll.Bounds.Width, scroll.Bounds.Height), false);
 			}
 		}
 	}

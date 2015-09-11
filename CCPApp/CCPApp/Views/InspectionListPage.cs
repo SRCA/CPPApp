@@ -155,7 +155,7 @@ namespace CCPApp.Views
 			}			
 			Inspection.DeleteInspection(inspection);
 			if (checklist.Inspections.Contains(inspection))
-			{	//This is supposed to be removed in the DeleteInspection method, but there appear to be multiple copies of som
+			{	//This is supposed to be removed in the DeleteInspection method, but there appear to be multiple copies of some
 					//objects in memory.
 				checklist.Inspections.Remove(inspection);
 			}

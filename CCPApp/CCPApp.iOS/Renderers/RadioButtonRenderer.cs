@@ -1,6 +1,7 @@
+using CoreGraphics;
 using System;
 using System.ComponentModel;
-using MonoTouch.UIKit;
+using UIKit;
 using Xamarin.Forms;
 
 using Xamarin.Forms.Platform.iOS;
@@ -30,9 +31,8 @@ namespace CCPApp.iOS.Renderers
 
                 SetNativeControl(checkBox);
             }
-
 			
-			Control.Font = UIFont.ItalicSystemFontOfSize(Control.Font.PointSize);
+			Control.Font = UIFont.ItalicSystemFontOfSize((nfloat)Control.Font.PointSize);
             Control.LineBreakMode = UILineBreakMode.CharacterWrap;
             Control.VerticalAlignment = UIControlContentVerticalAlignment.Center;
             Control.Text = e.NewElement.Text;
@@ -43,12 +43,11 @@ namespace CCPApp.iOS.Renderers
 
         private void ResizeText()
         {
-            var text = this.Element.Text;
-               
+            var text = this.Element.Text;               
 
-            var bounds = this.Control.Bounds;
+            var bounds = (CGRect)this.Control.Bounds;
 
-            var width = this.Control.TitleLabel.Bounds.Width;
+            nfloat width = this.Control.TitleLabel.Bounds.Width;
 
             var height = text.StringHeight(this.Control.Font, width);
 
@@ -60,15 +59,15 @@ namespace CCPApp.iOS.Renderers
 
             if (supportedLines != requiredLines)
             {
-                bounds.Height += (float)(minHeight * (requiredLines - supportedLines));
+                bounds.Height += (nfloat)(minHeight * (requiredLines - supportedLines));
                 this.Control.Bounds = bounds;
                 this.Element.HeightRequest = bounds.Height;
             }
         }
 
-        public override void Draw(System.Drawing.RectangleF rect)
+        public override void Draw(CGRect rect)
         {
-            base.Draw(rect);
+            base.Draw((CGRect)rect);
             this.ResizeText();
         }
 

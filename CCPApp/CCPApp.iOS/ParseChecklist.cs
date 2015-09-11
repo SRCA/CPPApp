@@ -1,4 +1,4 @@
-﻿using CCPApp;
+using CCPApp;
 using CCPApp.iOS;
 using CCPApp.Models;
 using System;
@@ -39,7 +39,6 @@ namespace CCPApp.iOS
 		{
 			return AttributeString(node.Attributes["Id"], System.Guid.NewGuid().ToString());
 		}
-
 
 		public void Parse(ChecklistModel model, string filename)
 		{

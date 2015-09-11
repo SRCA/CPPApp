@@ -11,8 +11,7 @@ using Xamarin.Forms;
 namespace CCPApp.Utilities
 {
     public class BindableRadioGroup: StackLayout
-    {
-       
+    {       
         public List<CustomRadioButton> rads;
 
         public BindableRadioGroup()
@@ -63,7 +62,7 @@ namespace CCPApp.Utilities
 					rad.Highlight(false);
 
                     radButtons.rads.Add(rad);
-                                    
+
                     radButtons.Children.Add(rad);
                     radIndex++;
                 }

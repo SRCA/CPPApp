@@ -262,8 +262,6 @@ namespace CCPApp.Views
 			//DependencyService.Get<IFileManage>().DeleteTempFile(filename);
 
 			await App.Navigation.PopModalAsync();
-		}
-
-		
+		}		
 	}
 }
